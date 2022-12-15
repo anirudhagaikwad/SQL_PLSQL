@@ -1,0 +1,73 @@
+## Oracle - PLSQL ##
+
+1) Cursor
+->
+/*
+cursor cursor_name [parameter][RETURN return_specification]
+IS sql_select_statement
+[FOR update [OF [col_list]]];
+*/
+set serveroutput on size 1000000;
+DECLARE
+CURSOR cust_cur IS 
+select first_name,last_name,email
+from 
+customer_info cinfo
+inner join customers cdet on cdet.customer_id=cinfo.customer_id;
+r_cur cust_cur%ROWTYPE;
+BEGIN
+open cust_cur;
+loop
+fetch cust_cur into r_cur;
+exit when cust_cur%NOTFOUND;
+dbms_output.put_line(r_cur.first_name||''||r_cur.last_name);
+end loop;
+CLOSE cust_cur;
+END;
+
+2)Table based Record
+->
+set serveroutput on size 1000000;
+DECLARE
+r_cust customer_info%ROWTYPE;
+r_custid customer_info.customer_id%TYPE:=2;
+BEGIN
+select * 
+into r_cust
+from customer_info
+where customer_id=r_custid;
+dbms_output.put_line(r_cust.first_name);
+END;
+
+3)Programmer-Defined record
+->
+/*
+TYPE type_name IS RECORD
+(filed_1 dtatype1 [NOT NULL :=[Default Value]);
+*/
+set serveroutput on;
+DECLARE
+TYPE t_name IS RECORD(first_name customer_info.first_name%TYPE,
+last_name customer_info.last_name%TYPE);
+r_name t_name;
+c_custid customer_info.customer_id%TYPe:=3;
+BEGIN
+select first_name,last_name into r_name
+from customer_info
+where customer_id=c_custid;
+dbms_output.put_line(r_name.first_name||' '||r_name.last_name);
+END;
+
+4)Cursor based record
+->
+set serveroutput on;
+DECLARE
+cursor cur_cust IS
+select * from customers
+where customer_id=2;
+cust_rec cur_cust%ROWTYPE;
+BEGIN
+NULL;
+END;
+
+

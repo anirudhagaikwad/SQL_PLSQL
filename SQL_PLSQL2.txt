@@ -1,0 +1,81 @@
+## MySQL table -> emp,empraw,empdetails,emphealth ## 
+1) Insert multiple rows into table
+-> insert into emp(empid,empname) values(1,'Ani'),(2,'Avantika'),(3,'Shravani'),(4,'Dolly');
+
+2) Insert values from other table
+-> insert into empraw(empid,empname) select * from emp;
+
+3) Update multiple rows from table
+-> update emp set empname='vaidahi' where empid=5;
+
+4) Update with subquery
+-> update empraw set lastname=(select lastname from emp where empid=empraw.empid);
+
+5)Delete multiple rows from table
+-> delete from empraw where empid in(1,2,3);
+
+6) delete rows from related tables
+-> delete from empraw where empid=4; delete from emp where empid=4;
+
+7) Where clause with operator numeric comparison
+-> select empname from emp where salary>77000;
+
+8) Order by caluse to sort in ascending or descending order
+-> select empname from emp where salary>77000 order by salary desc;
+
+9) Order by clause to sort values in multiple columns
+-> select empid,empname,lastname,salary from emp order by empname,lastname desc;
+
+10)limit clause - employee who has highest salary
+-> select empid,empname,lastname,salary from emp order by salary desc limit 2;
+
+11)limit clause with offset - employee who has highest salary
+-> select empid,empname,lastname,salary from emp order by salary desc limit 1 offset 2; 
+
+12) Distinct to remove duplicate rows from result
+-> select distinct empname from emp order by empname desc;
+
+13) Distinct operator on multiple column
+-> select distinct empid,salary from emp order by empid,salary desc;
+
+14)Distinct and NULL
+-> select distinct mobile from emp order by mobile;
+
+15) Create table with primary key
+-> create table projects(prid int primary key,prname varchar(50),stardate date not null,enddate date not null);
+
+16) Create table with constraint primary key
+-> create table empdetails(dtid int,blood varchar(4),joining date not null,address varchar(100),constraint pk_id primary key (dtid));
+
+17) Adding primary key with alter table
+-> alter table emp add constraint pk_empid primary key (empid);
+
+18) Romoving primery key
+->  alter table emp drop primary key;
+
+19) create table with foreign key
+-> create table emphealth(healtid int(2) auto_increment primary key,amount int not null,startdate date not null,expiredate date not null,inscompany varchar(255) not null,empid int(2),constraint fk_health foreign key (empid) references emp (empid));
+
+20) Add foreign key for existing table
+-> alter table empdetails add constraint fk_empid foreign key (empid) references emp (empid);
+
+21) Removing foreign key
+-> alter table empdetails drop  constraint fk_empid; 
+
+22) To view table defination and metadata
+-> show create table empdetails\G
+
+23) Unique constraints
+-> create table empworkspace(workid int auto_increment primary key,wroksapcename varchar(255) not null,workspace_code varchar(10) not null unique);
+
+24) add unique constraints to existing table
+-> alter table emp add email varchar(50) unique;
+
+
+
+
+
+
+
+
+

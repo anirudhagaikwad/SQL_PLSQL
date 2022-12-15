@@ -1,0 +1,11 @@
+# Envoirment Variable #
+1)Open Run Utility win+R and enter "sysdm.cpl"
+2)Click to "Advanced" TAB
+3)Click "Envourment Variables"
+4)From "System Variables" select "path" and click to "Edit"
+5)Click "New"
+6)Add path of mysql bin directory C:\xampp\mysql\bin
+7)click "ok"
+8)restart console
+9)Done
+

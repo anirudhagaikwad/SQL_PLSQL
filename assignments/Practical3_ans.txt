@@ -1,0 +1,8 @@
+mysql> select doctor_id,doctor_name,case when salary>="150000" then "5 years" when salary<150000 then "2 years" end as experience from doctor_list order by salary desc;
+mysql> select patient_id,doctor_id,case when doctor_id="OPD002" then "7/12/2022 5-7PM" when doctor_id="OPD007" then "7/12/2022 7-9PM" end as appointments from opd order by opd_id;
+mysql> create table visting_doctor(doctor_name varchar(20),doctor_id varchar(10),salary int(20));
+insert into visting_doctor(doctor_name,doctor_id,salary) select doctor_name,doctor_id,salary from doctor_list where specilization="General";
+mysql> select doctor_list.doctor_id,patient_list.patient_id,opd.opd_id,patient_list.prescription from doctor_list,patient_list,opd where opd.patient_id=patient_list.patient_id and patient_list.doctor_id=doctor_list.doctor_id;
+
+mysql> select doctorID,doctorName,case when salary>="25000" then "3 years" when salary<15000 then "2 years" end as experience from doctorList order by salary desc;
+mysql> select doctorslist.doctorID,patientslist.patientID,opd.opdID,patientslist.prescription from doctorslist,patientslist,opd where opd.patientID=patientslist.patientID and patientslist.doctorsID=doctorslist.doctorID;

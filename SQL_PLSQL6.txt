@@ -1,0 +1,95 @@
+## Oracle - PLSQL ##
+
+1) Exception :Predefine
+
+-> SET SERVEROUTPUT ON;
+DECLARE
+c_name customer_info.custname%TYPE;
+c_id customer_info.custid%TYPE:=&custid;
+BEGIN
+selct custname into c_name
+from customer_info
+where custid>c_id;
+dbms_output.put_line('Customer Name :'||c_name);
+EXCEPTION
+when NO_DATA_FOUND then
+dbms_ouput.put_line('Data not exist');
+when TOO_MANY_ROWS then
+dbms_output.put_line('its return more than one row');
+End;
+/
+
+2) Rise internally define exception
+-> SET SERVEROUTPUT ON;
+DECLARE
+c_id customer_info.custid%TYPE:=&custid;
+BEGIN
+if c_id<0 then
+raise invalid_number;
+end if;
+END;
+
+3)Rise User-Define Exception
+-> SET SERVEROUTPUT ON;
+DECLARE
+e_credit_high EXCEPTION ;-- customer_info.custid%TYPE:=&custid;
+PRAGMA exption_init(c_credit_high,-40001);
+c_max_credit customer_info.credit_limit%TYPE;
+c_id customer_info.custid%TYPE:=&custid;
+c_credit customer_info.credit_limit%TYPE:=&credit_limit;
+BEGIN
+selct max(credit_limit)
+into c_max_credit
+from customer_info;
+if c_credit > c_max_credit then
+raise e_credit_high;
+end if;
+END;
+
+4)Procedure
+-> CREATE OR REPLACE PROCEDURE show_contact(
+    in_customer_id NUMBER 
+)
+IS
+  r_contact customer_info%ROWTYPE;
+BEGIN
+select *
+into r_contact
+from customer_info
+  WHERE customer_id = in_customer_id;
+  dbms_output.put_line( r_contact.first_name || ' ' ||
+  r_contact.last_name || '<' || r_contact.email ||'>' );
+
+EXCEPTION
+   WHEN OTHERS THEN
+      dbms_output.put_line( SQLERRM );
+END;
+
+5)Procedure & Cursor
+-> create or replace NONEDITIONABLE procedure get_credit(min_credit number)
+AS
+c_cutomers SYS_REFCURSOR;
+BEGIN
+open c_cutomers for
+select customer_id,credit_limit,name
+from customers
+where credit_limit > min_credit
+order by credit_limit;
+dbms_sql.return_result(c_cutomers);
+END;
+
+6)Function
+-> create or replace NONEDITIONABLE function get_credit_limit(min_credit number)
+return number
+IS
+c_limit number:=0;
+BEGIN
+select credit_limit
+into c_limit
+from customers
+where credit_limit > min_credit
+order by credit_limit;
+return c_limit;
+END;
+
+

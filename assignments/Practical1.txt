@@ -1,0 +1,8 @@
+1)create database for super market and add coloumns itemname,itemunit,price,current_qty
+2)Add 10 items in table
+3)Add minPrice,maxPrice coloumn into table
+4)Add values into minPrice,maxPrice coloumn
+5)Alter first and last row values from minPrice,maxPrice coloumn
+6)Show table values
+7)show table Structure
+8)Delete 5th row from table

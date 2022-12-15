@@ -1,0 +1,10 @@
+1)use hospital database 
+and perform all operations which we discussed today
+2)show list of doctors with their experience without add column into table 
+sample Column  -> doctid doctname doctjoin doctexpinhospitl 
+3)show list of patients who conselt doct in opd in curent year
+sample -> patientname doctname appointment
+4)create new table 'visiting_doctor' and copy some doctors into that table from existing doctor list table
+5)show patient and doctor list from opd,doctorlist,medical table using single query
+sample -> patientName apointmentDate DoctorName Pricription Medicine
+

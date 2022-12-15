@@ -1,0 +1,97 @@
+## MySQL table -> emp,empraw,empdetails,emphealth,expl_bigtbl ## 
+
+1)Truncate table
+-> truncate expl_bigtbl;
+-> truncate table expl_bigtbl;
+
+2)Check Constraint
+-> create table cmp_product(proid int primary key,proname varchar(255) not null,selcost numeric(10,2)  check (selcost > 0));
+
+3)Check Constraint for multiple column
+-> create table cmp_product(prodid int primary key,prodname varchar(255) not null,sellprice numeric(10,2) check (sellprice>0),prodcost numeric(10,2) check (prodcost>0),check (sellprice>prodcost));
+
+4) Comparison operator =
+-> select empname,lastname,salary from emp where lastname="Patil";
+
+5) 'equal' operator canot be used to comapre null values
+-> select empid,empname,lastname,mobile from emp where mobile=null;
+
+6) To compare null use 'is null' operator
+-> select empid,empname,lastname,mobile from emp where mobile is null;
+
+7)<> Not equal to operator
+-> select empid,empname,lastname from emp where empid <> 8 order by empname,lastname;
+
+8)'AND' operator
+-> select empid,empname,lastname from emp where empid <> 6 AND empid <> 7 order by empname,lastname;
+
+9) Greater Than '>' operator
+-> select empname from emp where salary>77000;
+
+10)Less Than '<' operator
+-> select empname from emp where salary<77000;
+
+11)Greter Than or equal '>=' operator
+-> select empname,lastname,salary from emp where salary>=77000;
+
+12)Less Than or equal '<=' operator
+-> select empname,lastname,salary from emp where salary<=77000;
+
+13)'OR' Operator
+-> select empid,empname,lastname,salary from emp where salary=70000 or salary=92000 order by salary;
+
+14)'Between' Operator
+-> select empid,empname,lastname,salary from emp where salary between 65000 and 85000 order by salary;
+
+15)'In' Operator
+-> select empid,empname,lastname,salary from emp where empid in (2,5) order by empid;
+
+16)'Like' operator with wild card '%'
+-> select empid,empname,lastname,salary from emp where empname like 'A%' order by empname;
+
+17)'Like' operator with wild card '_'
+-> select empid,empname,lastname,salary from emp where empname like '_n%' order by empname;
+
+18)'All' Operator
+-> select empname,lastname,salary from emp where salary>=all (select salary from emp where empid=3) order by salary desc; 
+
+19)'Any' Operator 
+-> select empname,lastname,salary from emp where salary>any(select avg(salary) from emp group by empid) order by empname,lastname; 
+
+20)'Exists' Operator
+-> select empname,lastname from emp e where exists(select 1 from empdetails d where d.empid=e.empid);
+
+21)'Not' Operator
+-> select empid,empname,lastname,salary from emp where empid=3 and not salary>85000 order by salary;
+
+22)'Not Exist' Operator
+-> select empid,empname,lastname from emp e where not exists(select empid from empdetails d where d.empid=e.empid);
+
+23)Simple CASE Expression
+-> select dtid,blood,joining,empid, case(2022 - year(joining)) when 1 then '1 year' when 3 then '3 year' when 30 then '30 years' when 34 then '34 years' when 35 then '35 years' end expirence from empdetails order by dtid;
+
+23)Search CASE Expression
+-> select empname,lastname, case when salary<75000 then 'Minimum Salary' when salary>=75000 and salary<82000 then 'Mid Salary' when salary>82000 then 'High Salary' end salary from emp; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

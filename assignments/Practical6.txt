@@ -1,0 +1,13 @@
+1) Write a PL/SQL program using WHILE loop for calculating the average of the numbers entered by user. Stop the entry of numbers whenever the user enters the number 0.
+-- Take input from user
+   varName := &input_number;
+2)Write a PL/SQL code to count the number of Sundays between the two inputted dates.
+3)Write PL/SQL code block to increment the salesman's sales by 5 whose sales_id is 2 from below table
+######################################################### 
+  region         salesman         sales        sales_id
+---------------------------------------------------------
+  Maharashtra     XYZ             10              1
+  Andra           ABC             12              2
+  Telangana       QWE             15              3
+4)Write PL/SQL program to find the sum of digits of a number.
+5)write above all program using Procedure

@@ -1,0 +1,54 @@
+## MySQL table -> emp,empraw,empdetails,emphealth,expl_bigtbl ## 
+
+1)Alias column
+-> select empname as name,lastname as surname,salary as monthly_income from emp;
+
+2)Alise Table
+-> select e.empname,e.lastname,e.salary from emp as e;
+
+3)Inner join
+-> select empname,lastname,emp.empid,empdetails.empid from emp inner join empdetails on empdetails.empid=emp.empid where emp.empid in(1,2,6);
+
+4)Left Join
+-> select e.empname,e.empid,d.empid from emp e left join empdetails d on d.empid=e.empid where e.empid in(1,2,3,4,5,6);
+
+5)Full outer Join
+-> select cartname,itemname from choise full outer join cart on cart.cartid=choise.cartid;
+
+6)Cross Join
+-> select cartname,itemname from cart cross join choise;
+
+7)AVG()
+-> select avg(distinct salary) from emp;
+
+8)Round()
+-> select round(avg(distinct salary),2) from emp;
+
+9)Group by and Order by  - AVG()
+-> select e.empid,e.empname,avg(salary) from emp e inner joi
+n empdetails d on d.empid=e.empid group by e.empid order by avg(salary) desc
+;
+
+10)Count()
+-> select count(*) from emp;
+
+11)Group by and Order by - Count()
+-> select e.empname,d.joining,count(*) from emp e inner join empdetails d on d.empid=e.empid group by e.empid order by count(*) desc;
+
+12)Sum()
+-> select sum(salary) from emp;
+
+13)Group by and Order by - Sum()
+-> select e.empname,d.joining,sum(salary) from emp e inner join empdetails d on d.empid=e.empid group by e.empid order by sum(salary) desc;
+
+14) Max()
+-> select max(salary) from emp;
+
+15) Min()
+-> select min(salary) from emp;
+
+
+ERROR at line 1:
+ORA-01501: CREATE DATABASE failed
+ORA-01100: database already mounted : prajakta
+
