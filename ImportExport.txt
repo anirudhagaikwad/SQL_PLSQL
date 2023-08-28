@@ -1,14 +1,14 @@
 #### Import Database
-mysql -u root -p chitkara < Decomposition.sql
+mysql -u root -p DbName < Decomposition.sql
 
 ###Export Database
 
-mysql -u root -p chitkara > Decomposition.sql
+mysql -u root -p DbName > Decomposition.sql
 
 or 
 
-mysqldump -u root -p chitkara > Decomposition.sql
+mysqldump -u root -p DbName > Decomposition.sql
 
 ### Create a MySQL database with charset UTF-8
 
-CREATE DATABASE chitkara CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE DbName CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
