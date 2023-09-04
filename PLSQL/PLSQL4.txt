@@ -1,0 +1,69 @@
+1)PL/SQL CASE Statement:
+CASE [TRUE | selector]
+   WHEN expression1 THEN
+	sequence_of_statements1;
+   WHEN expression2 THEN
+	sequence_of_statements2;
+   ...
+   WHEN expressionN THEN
+	sequence_of_statementsN;
+  [ELSE sequence_of_statementsN+1;]
+END CASE [label_name];
+
+-->
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  n_pct    employees.commission_pct%TYPE;
+  v_eval   varchar2(10);
+  n_emp_id employees.employee_id%TYPE := 145;
+BEGIN
+  -- get commission percentage
+  SELECT commission_pct
+  INTO n_pct
+  FROM employees
+  WHERE employee_id = n_emp_id;
+
+  -- evalutate commission percentage
+  CASE n_pct
+    WHEN 0 THEN
+      v_eval := 'N/A';
+    WHEN 0.1 THEN
+      v_eval := 'Low';
+    WHEN 0.4 THEN
+      v_eval := 'High';
+    ELSE
+      v_eval := 'Fair';
+  END CASE;
+  -- print commission evaluation
+  DBMS_OUTPUT.PUT_LINE('Employee ' || n_emp_id || 
+                       ' commission ' || TO_CHAR(n_pct) ||
+                       ' which is '   || v_eval);
+END;
+
+2)PL/SQL searched CASE :
+PL/SQL provides a special CASE statement called searched CASE statement. 
+-The searched CASE statement has no selector. Each WHEN clause in the searched CASE statement contains a search condition that returns a Boolean value.
+-The search condition is evaluated sequentially from top to bottom. If a search condition evaluates to TRUE, the sequence of statements in the corresponding WHEN clause is executed and  the control is passed to the next statement, therefore, the subsequent search conditions are ignored.
+-If no search condition evaluates to TRUE, the sequence of statements in the ELSE clause will be executed.
+-->
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  n_salary EMPLOYEES.SALARY%TYPE;
+  n_emp_id EMPLOYEES.EMPLOYEE_ID%TYPE := 200;
+  v_msg    VARCHAR(20);
+BEGIN
+  SELECT salary
+  INTO n_salary
+  FROM employees
+  WHERE employee_id = n_emp_id;
+
+  CASE
+    WHEN n_salary < 2000 THEN
+      v_msg := 'Low';
+    WHEN n_salary >= 2000 and n_salary <=3000 THEN
+      v_msg := 'Fair';
+    WHEN n_salary >= 3000 THEN
+      v_msg := 'High';
+  END CASE;
+  DBMS_OUTPUT.PUT_LINE(v_msg);
+END;

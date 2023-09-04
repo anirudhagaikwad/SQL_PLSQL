@@ -1,0 +1,43 @@
+1)PL/SQL LOOP Statement :
+PL/SQL LOOP statement is an iterative control statement that allows you to execute a sequence of statements repeatedly.
+LOOP
+   sequence_of_statements;
+   EXIT WHEN statement;
+END LOOP;
+
+-There must be at least one executable statement between LOOP and END LOOP keywords. The sequence of statements is executed repeatedly until it reaches a loop exit. PL/SQL provides EXIT and EXIT-WHEN statements to allow you to terminate a loop.
+-The EXIT forces the loop halts execution unconditionally and passes control to the next statement after the LOOP statement. You typically use the EXIT statement with the IF statement.
+-The EXIT-WHEN statement allows the loop to terminate conditionally. When the EXIT-WHEN statement is reached, the condition in the WHEN clause is checked. If the condition evaluates to TRUE, the loop is terminated and control  is passed to the next statement after the keyword END LOOP. If the condition evaluates to FALSE, the loop will continue repeatedly until the condition evaluates to TRUE. Therefore, if you don’t want to have an infinite loop, you must do something inside the loop to make condition becomes TRUE
+
+-->
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE n_counter NUMBER := 0;
+BEGIN
+  LOOP
+    n_counter := n_counter + 1;
+    DBMS_OUTPUT.PUT_LINE(n_counter);
+    EXIT WHEN n_counter = 5;
+  END LOOP;
+END;
+
+2)Loop Label :
+A loop can have an optional label that is an undeclared identifier enclosed by double angle brackets <<label>>. The loop label appears at the beginning and also at the end of the PL/SQL LOOP statement. A loop label is used to qualify the name of the loop counter variable when a loop is nested inside another loop.
+-->
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  n_i NUMBER := 0;
+  n_j NUMBER := 0;
+BEGIN
+  << outer_loop >>
+  LOOP
+    n_i := n_i + 1;
+    EXIT WHEN n_i = 2;
+    << inner_loop >>
+    LOOP
+      n_j := n_j + 1;
+      EXIT WHEN n_j = 5;
+      DBMS_OUTPUT.PUT_LINE('Outer loop counter ' || n_i);
+      DBMS_OUTPUT.PUT_LINE('Inner loop counter ' || n_j);
+    END LOOP inner_loop;
+  END LOOP outer_loop;
+END;

@@ -1,0 +1,133 @@
+1)PL/SQL IF-THEN Statement :
+IF condition THEN
+   sequence_of_statements;
+END IF;
+-->It updates employee’s salary to mid-range if employee’s salary is lower than the mid-range.
+DECLARE
+  n_min_salary NUMBER(6,0);
+  n_max_salary NUMBER(6,0);
+  n_mid_salary NUMBER(6,2);
+  n_salary     EMPLOYEES.SALARY%TYPE;
+  n_emp_id     EMPLOYEES.EMPLOYEE_ID%TYPE := 200;
+BEGIN
+  -- get salary range of the employee
+  -- based on job
+  SELECT min_salary,
+         max_salary
+  INTO n_min_salary,
+       n_max_salary
+  FROM JOBS
+  WHERE JOB_ID = (SELECT JOB_ID
+                 FROM EMPLOYEES
+                 WHERE EMPLOYEE_ID = n_emp_id);
+
+  -- calculate mid-range
+  n_mid_salary := (n_min_salary + n_max_salary) / 2;
+  -- get salary of the given employee
+  SELECT salary
+  INTO n_salary
+  FROM employees
+  WHERE employee_id = n_emp_id;
+
+  -- update employee's salary if it is lower than
+  -- the mid range
+  IF n_salary < n_mid_salary THEN
+    UPDATE employees
+    SET salary = n_mid_salary
+    WHERE employee_id = n_emp_id;
+  END IF;
+END;
+
+2)PL/SQL IF-THEN-ELSE Statement:
+-->
+DECLARE
+  n_min_salary NUMBER(6,0);
+  n_max_salary NUMBER(6,0);
+  n_mid_salary NUMBER(6,2);
+  n_salary     EMPLOYEES.SALARY%TYPE;
+  n_emp_id     EMPLOYEES.EMPLOYEE_ID%TYPE := 200;
+BEGIN
+  -- get salary range of the employee
+  -- based on job
+  SELECT min_salary,
+         max_salary
+  INTO n_min_salary,
+       n_max_salary
+  FROM JOBS
+  WHERE JOB_ID = (SELECT JOB_ID
+                 FROM EMPLOYEES
+                 WHERE EMPLOYEE_ID = n_emp_id);
+
+  -- calculate mid-range
+  n_mid_salary := (n_min_salary + n_max_salary) / 2;
+  -- get salary of the given employee
+  SELECT salary
+  INTO n_salary
+  FROM employees
+  WHERE employee_id = n_emp_id;
+
+ -- update employee's salary if it is lower than
+  -- the mid range, otherwise increase 5%
+  IF n_salary < n_mid_salary THEN
+    UPDATE employees
+    SET salary = n_mid_salary
+    WHERE employee_id = n_emp_id;
+  ELSE
+    UPDATE employees
+    SET salary = salary + salary * 5 /100
+    WHERE employee_id = n_emp_id;
+  END IF;
+END;
+
+3)PL/SQL IF-THEN-ELSIF Statement :
+IF condition1  THEN
+   sequence_of_statements1
+ELSIF condition2 THEN
+   sequence_of_statements2
+ELSE
+   sequence_of_statements3
+END IF;
+-->
+DECLARE
+  n_min_salary NUMBER(6,0);
+  n_max_salary NUMBER(6,0);
+  n_mid_salary NUMBER(6,2);
+  n_salary     EMPLOYEES.SALARY%TYPE;
+  n_emp_id     EMPLOYEES.EMPLOYEE_ID%TYPE := 200;
+BEGIN
+  -- get salary range of the employee
+  -- based on job
+  SELECT min_salary,
+         max_salary
+  INTO n_min_salary,
+       n_max_salary
+  FROM JOBS
+  WHERE JOB_ID = (SELECT JOB_ID
+                 FROM EMPLOYEES
+                 WHERE EMPLOYEE_ID = n_emp_id);
+
+  -- calculate mid-range
+  n_mid_salary := (n_min_salary + n_max_salary) / 2;
+  -- get salary of the given employee
+  SELECT salary
+  INTO n_salary
+  FROM employees
+  WHERE employee_id = n_emp_id;
+
+  -- update employee's salary if it is lower than
+  -- the mid range, otherwise increase 5%
+  IF n_salary > n_mid_salary THEN
+    DBMS_OUTPUT.PUT_LINE('Employee ' || TO_CHAR(n_emp_id) ||
+                         ' has salary $' || TO_CHAR(n_salary) ||
+                         ' higher than mid-range $' || TO_CHAR(n_mid_salary));
+  ELSIF n_salary < n_mid_salary THEN
+    DBMS_OUTPUT.PUT_LINE('Employee ' || TO_CHAR(n_emp_id) ||
+                         ' has salary $' || TO_CHAR(n_salary) ||
+                         ' lower than mid-range $' || TO_CHAR(n_mid_salary));
+
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Employee ' || TO_CHAR(n_emp_id) ||
+                         ' has salary $' || TO_CHAR(n_salary) ||
+                         ' equal to mid-range $' || TO_CHAR(n_mid_salary));
+  END IF;
+END;

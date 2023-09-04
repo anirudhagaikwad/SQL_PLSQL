@@ -1,0 +1,21 @@
+1)Block :PL/SQL program units organize the code into blocks. A block without a name is known as an anonymous block. The anonymous block is the simplest unit in PL/SQL. It is called anonymous block because it is not saved in the Oracle database.
+
+[DECLARE]
+   Declaration statements;
+BEGIN
+   Execution statements;
+  [EXCEPTION]
+      Exception handling statements;
+END;
+
+-The declaration section allows you to define data types, structures, and variables. You often declare variables in the declaration section by giving them names, data types, and initial values.
+-The execution section is required in a block structure and it must have at least one statement. The execution section is the place where you put the execution code or business logic code. You can use both procedural and SQL statements inside the execution section.
+-The exception handling section is starting with the EXCEPTIONkeyword. The exception section is the place that you put the code to handle exceptions. You can either catch or handle exceptions in the exception section.
+
+--> 
+SET SERVEROUTPUT ON SIZE 1000000
+BEGIN
+   DBMS_OUTPUT.PUT_LINE('Hello PL/SQL');
+END;
+
+

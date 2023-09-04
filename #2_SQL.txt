@@ -1,12 +1,12 @@
-## MySQL table -> emp,empraw,empdetails,emphealth ## 
 1) Insert multiple rows into table
--> insert into emp(empid,empname) values(1,'Ani'),(2,'Avantika'),(3,'Shravani'),(4,'Dolly');
+-> INSERT INTO regions(region_id,region_name) VALUES (1,'Europe'),(2,'ASIA'),(3,'AUSTRALIA');
 
 2) Insert values from other table
 -> insert into empraw(empid,empname) select * from emp;
 
-3) Update multiple rows from table
--> update emp set empname='vaidahi' where empid=5;
+3) Update multiple values in one column in SQL
+-> UPDATE regions SET DATA=ELT(FIELD(region_id,1,2,3),'ABC','ZYF','QWE');
+-> insert into regions(region_id,region_name) values(1,'ASIA'),(2,'Europe') ON duplicate key update region_name=values(region_name);
 
 4) Update with subquery
 -> update empraw set lastname=(select lastname from emp where empid=empraw.empid);
@@ -70,12 +70,4 @@
 
 24) add unique constraints to existing table
 -> alter table emp add email varchar(50) unique;
-
-
-
-
-
-
-
-
 

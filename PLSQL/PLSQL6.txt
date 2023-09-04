@@ -1,0 +1,25 @@
+1)PL/SQL WHILE Loop :
+Sometimes, you don’t know in advance how many times a sequence of statements needs to execute because it depends on a condition which is not fixed at compile time. In such cases, you should use PL/SQL WHILE LOOP statement.
+WHILE condition
+LOOP
+   sequence_of_statements;
+END LOOP;
+
+-->
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  n_counter   NUMBER := 10;
+  n_factorial NUMBER := 1;
+  n_temp      NUMBER;
+BEGIN
+  n_temp := n_counter;
+  WHILE n_counter > 0
+  LOOP
+    n_factorial := n_factorial * n_counter;
+    n_counter   := n_counter - 1;
+  END LOOP;
+
+  DBMS_OUTPUT.PUT_LINE('factorial of ' || n_temp ||
+                       ' is ' || n_factorial);
+
+END;

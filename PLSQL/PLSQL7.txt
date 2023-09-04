@@ -1,0 +1,17 @@
+1)PL/SQL FOR Loop :
+PL/SQL FOR loop is an iterative statement that allows you to execute a sequence of statements a fixed number of times.
+FOR loop_counter IN [REVERSE] lower_bound .. higher_bound
+LOOP
+   sequence_of_statements;
+END LOOP;
+
+By default, the loop iterates in the upward fashion from the lower_bound to the higher_bound. However, if you want to force the loop to iterate in a downward way from the higher_bound to the lower_bound, you can use the REVERSE keyword after the IN keyword.
+-->
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  n_times NUMBER := 10;
+BEGIN
+  FOR n_i IN 1..n_times LOOP
+    DBMS_OUTPUT.PUT_LINE(n_i);
+  END LOOP;
+END;

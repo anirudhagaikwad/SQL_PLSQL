@@ -1,0 +1,15 @@
+1) PL/SQL GOTO statement :
+ GOTO statement allows you to jump to a specific executable statement in the same execution section of a PL/SQL block.
+ 
+-->
+SET SERVEROUTPUT ON SIZE 1000000;
+BEGIN 
+  GOTO label_1;
+  DBMS_OUTPUT.PUT_LINE('Right after the GOTO statement');
+  <<label_1>>
+  DBMS_OUTPUT.PUT_LINE('It is here!');
+END;
+
+When PL/SQL reaches the GOTO statement, it skips everything and immediately jumps to the target label i.e. label_1 and it displays the message It is here
+
+The PL/SQL GOTO statement has a bad reputation because it makes the code hard to understand and difficult to debug. In general, the PL/SQL GOTO statement should be avoided and replaced by other statements such as IF or CASE statement. 

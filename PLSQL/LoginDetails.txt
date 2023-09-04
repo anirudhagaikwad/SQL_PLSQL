@@ -1,0 +1,34 @@
+Download Oracle_Database_23c_Free_Developer_Appliance.ova image and import it in VirtualBox
+https://www.oracle.com/database/technologies/databaseappdev-vm.html
+
+*** Oracle Database 23c Free – Developer Release is the first release of the next-generation Oracle Database,
+allowing developers a head-start on building applications with innovative 23c features that simplify development
+of modern data-driven apps. The entire feature set of Oracle Database 23c is planned to be generally available
+within the next 12 months. *** 
+
+
+*** Please note that this appliance is for testing purposes only, 
+as such it is unsupported and should not be used as a production environment. ***
+
+
+Database Information:
+Oracle SID    : free
+Pluggable DB  : freepdb1
+
+ALL PASSWORDS ARE : oracle
+
+Sample schemas have been preloaded (HR, OE, PM, IX, BI, AV, SH) for your convenience.
+
+Oracle REST Data Service (ORDS) and APEX are both installed, configured, and available at startup.
+Port Forwards are defined for HTTP and SQL*Net, these are configurable in the Virtual Machine settings.
+  8080:8080
+  1521:1521 
+
+From your host, simply launch:
+ http://localhost:8080/ords to launch APEX
+ http://localhost:8080/ords/sql-developer to start SQL Developer Web
+ sql hr/oracle@localhost:1521/freepdb1 tp get a SQLcl session for the Pluggable Database (PDB)
+ sql system/oracle@localhost:1521/free to get a SQLcl session for the Container Database (CDB)
+
+The HR schema is REST enabled, you can login to SQL Developer Web using:
+  HR/oracle
