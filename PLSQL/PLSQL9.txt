@@ -1,0 +1,71 @@
+PL/SQL function
+-----------------
+PL/SQL function is a named block that returns a value. A PL/SQL function is also known as a subroutine or a subprogram.
+CREATE [OR REPLACE] FUNCTION function_name [(
+   parameter_1 [IN] [OUT] data_type,
+   parameter_2 [IN] [OUT] data_type,
+   parameter_N [IN] [OUT] data_type]
+    RETURN return_data_type IS
+--the declaration statements
+BEGIN
+   -- the executable statements
+   return return_data_type;
+   EXCEPTION
+    -- the exception-handling statements
+END;
+
+A function may have zero or more than one parameter. You specify the parameter names in the parameter_1, parameter_2, etc. You must specify the data type of each parameter explicitly in the data_type. Each parameter has one of three modes: IN, OUT and IN OUT.
+
+An IN parameter is a read-only parameter. If the function tries to change the value of the INparameters, the compiler will issue an error message. You can pass a constant, literal, initialized variable, or expression to the function as the INparameter.
+An OUTparameter is a write-only parameter. The OUTparameters are used to return values back to the calling program. An OUTparameter is initialized to a default value of its type when the function begins regardless of its original value before being passed to the function.
+An IN OUT parameter is read and write parameter. It means the function reads the value from an IN OUT parameter, change its value and return it back to the calling program.
+
+CREATE OR REPLACE FUNCTION add_numbers (
+    p_num1 NUMBER,
+    p_num2 NUMBER
+) RETURN NUMBER
+IS
+    v_result NUMBER;
+BEGIN
+    -- Calculate the sum of the two input numbers
+    v_result := p_num1 + p_num2;
+    
+    -- Return the result
+    RETURN v_result;
+END add_numbers;
+
+-- Call the function and store the result in a variable
+DECLARE
+    result NUMBER;
+BEGIN
+    result := add_numbers(10, 20);
+    DBMS_OUTPUT.PUT_LINE('The sum is: ' || result);
+END;
+/
+
+----------------------------------
+CREATE OR REPLACE FUNCTION try_parse(
+    iv_number IN VARCHAR2)
+  RETURN NUMBER IS
+BEGIN
+   RETURN to_number(iv_number);
+   EXCEPTION
+     WHEN others THEN
+        RETURN NULL;
+END;
+
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  n_x number;
+  n_y number;
+   n_z number;
+BEGIN
+   n_x := try_parse('574');
+   n_y := try_parse('12.21');
+   n_z := try_parse('abcd');
+
+   DBMS_OUTPUT.PUT_LINE(n_x);
+   DBMS_OUTPUT.PUT_LINE(n_y);
+   DBMS_OUTPUT.PUT_LINE(n_z);
+END;
+-------------------------------------

@@ -1,0 +1,175 @@
+SQL Dialects
+-------------
+PLSQL
+pgSQL
+MYSQL Procedural Language
+TransactSQL
+
+PLSQL
+-------------------------
+Block Structure
+Variables
+Functions
+Procedure
+Control Statement : If,Case,Loop,While,For
+Exception Handling
+Record
+Cursour
+Pakages
+
+
+Block
+---------
+[DECLARE]
+Decleration statements;
+BEGIN
+Execute statements;
+END;
+
+
+BEGIN
+statement;
+END;
+
+
+
+SET SERVEROUTPUT ON SIZE 50000
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('Hello');
+END;	
+	
+
+DECLARE
+	v_f_name varchar(20);
+	d_hire_date date;
+BEGIN
+	NULL;
+END;
+
+Variable Rules
+----------------
+var<31Char
+VarBegin with ASCII letter
+	
+Variable Naming
+v_
+n_
+t_
+r_
+d_
+b_
+
+
+
+IF Statement
+----------------
+DECLARE
+
+BEGIN
+	IF 5>2 THEN
+		DBMS_OUTPUT.PUT_LINE('5 grater than 2 is true');
+	ELSEIF 5>3 THEN
+		DBMS_OUTPUT.PUT_LINE('5 grater than 3 is true');
+	ELSE
+		DBMS_OUTPUT.PUT_LINE('both if not true');
+	END IF;
+	
+END;			
+
+
+LOOP
+-------------
+SET SERVEROUTPUT ON SIZE 50000
+DECLARE n_counter NUMBER:=0;
+BEGIN
+	LOOP
+		n_counter:=n_counter+1;
+		DBMS_OUTPUT.PUT_LINE(n_counter);
+		IF n_counter=6 THEN
+			EXIT;
+		END IF;	
+	END LOOP;
+
+END;
+
+
+WHILE
+-------------
+SET SERVEROUTPUT ON SIZE 50000
+DECLARE
+	n_counter NUMBER:=10;
+	n_factorial NUMBER:=1;
+	n_temp NUMBER;
+BEGIN
+	n_temp:=n_counter;	
+	WHILE n_counter>0
+	LOOP
+		n_factorial:=n_factorial*n_counter;
+		n_counter:=n_counter-1;
+	END LOOP;	
+	DBMS_OUTPUT.PUT_LINE('facto of ' || n_temp || 'is' || n_factorial);	
+
+END;
+
+
+FOR LOOP
+------------------------
+SET SERVEROUTPUT ON SIZE 50000
+DECLARE
+	n_times NUMBER:=10;
+BEGIN
+	FOR n_i IN 1..n_times LOOP
+		DBMS_OUTPUT.put_LINE(n_i);
+	END LOOP;	
+END;
+
+
+CURSOUR
+------------------------
+CURSOR cur_chef
+IS 
+	SELECT
+		first_name,last_name,department_name
+	FROM
+		employees e
+	INNER JOIN departments d ON d.manager_id=e.employee_id;
+	
+	
+View
+------------
+CREATE VIEW emp_details AS SELECT first_name,last_name FROM employees
+ where employee_id IS NOT NULL;
+ 				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

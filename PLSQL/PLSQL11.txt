@@ -1,0 +1,70 @@
+PL/SQL Cursor
+--------------------
+When you work with Oracle database, you work with a complete set of rows returned from an SELECT statement. However the application in some cases cannot work effectively with the entire result set, therefore, the database server needs to provide a mechanism for the application to work with one row or a subset of the result set at a time. As the result, Oracle created PL/SQL cursor to provide these extensions.
+
+A PL/SQL cursor is a pointer that points to the result set of an SQL query against database tables.
+
+-->
+-- Declare variables to hold cursor data
+DECLARE
+  v_first_name employees.first_name%TYPE;
+  v_last_name employees.last_name%TYPE;
+  v_department_name departments.department_name%TYPE;
+BEGIN
+  -- Open the cursor
+  OPEN cur_chief;
+
+  -- Loop through the cursor's result set
+  LOOP
+    -- Fetch data from the cursor into variables
+    FETCH cur_chief INTO v_first_name, v_last_name, v_department_name;
+
+    -- Exit the loop when there are no more rows to fetch
+    EXIT WHEN cur_chief%NOTFOUND;
+
+    -- Display the fetched data
+    DBMS_OUTPUT.PUT_LINE('First Name: ' || v_first_name);
+    DBMS_OUTPUT.PUT_LINE('Last Name: ' || v_last_name);
+    DBMS_OUTPUT.PUT_LINE('Department Name: ' || v_department_name);
+  END LOOP;
+
+  -- Close the cursor
+  CLOSE cur_chief;
+END;
+/
+----------------------------------------------------
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  -- declare a cursor
+  CURSOR cur_chief IS
+      SELECT first_name,
+             last_name,
+             department_name
+      FROM employees e
+      INNER JOIN departments d ON d.manager_id = e.employee_id;
+
+  r_chief cur_chief%ROWTYPE;
+BEGIN
+  OPEN cur_chief;
+  LOOP
+    -- fetch information from cursor into record
+    FETCH cur_chief INTO r_chief;
+
+    EXIT WHEN cur_chief%NOTFOUND;
+
+    -- print department - chief
+    DBMS_OUTPUT.PUT_LINE(r_chief.department_name || ' - ' ||
+                         r_chief.first_name || ',' ||
+                         r_chief.last_name);
+  END LOOP;
+  -- close cursor cur_chief
+  CLOSE cur_chief;
+END;
+
+--------------------------------------------------------------------------
+    Attribute           	Description
+cursor_name%FOUND	returns TRUEif record was fetched successfully by cursor cursor_name
+cursor_name%NOTFOUND	returns TRUEif record was not fetched successfully by cursor cursor_name
+cursor_name%ROWCOUNT	returns the number of records fetched from the cursor cursor_nameat the time we test %ROWCOUNT attribute
+cursor_name%ISOPEN	returns TRUEif the cursor cursor_nameis open
+----------------------------------------------------------------------------

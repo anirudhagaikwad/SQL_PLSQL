@@ -1,11 +1,10 @@
 Download Oracle_Database_23c_Free_Developer_Appliance.ova image and import it in VirtualBox
-https://www.oracle.com/database/technologies/databaseappdev-vm.html
+https://www.oracle.com/downloads/developer-vm/community-downloads.html
 
 *** Oracle Database 23c Free – Developer Release is the first release of the next-generation Oracle Database,
 allowing developers a head-start on building applications with innovative 23c features that simplify development
 of modern data-driven apps. The entire feature set of Oracle Database 23c is planned to be generally available
 within the next 12 months. *** 
-
 
 *** Please note that this appliance is for testing purposes only, 
 as such it is unsupported and should not be used as a production environment. ***

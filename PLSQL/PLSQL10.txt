@@ -1,0 +1,83 @@
+PL/SQL Procedure
+--------------------
+Like a PL/SQL function, a PL/SQL procedure is a named block that does a specific task. PL/SQL procedure allows you to encapsulate complex business logic and reuse it in both database layer and application layer.
+
+main difference between a function and a procedure in PL/SQL is that functions return a value and can be used in SQL statements, while procedures do not return values directly and are used for performing actions or tasks
+
+PROCEDURE [schema.]name[( parameter[, parameter...] ) ]
+[AUTHID DEFINER | CURRENT_USER]
+IS
+[--declarations  statements]
+BEGIN
+--executable statements
+[ EXCEPTION
+---exception handlers]
+END [name];
+
+The section before IS keyword is called procedure header or procedure signature. The elements in the procedure’s header are described as follows:
+
+schema: the optional name of the schema that the procedure belongs to. The default is the current user. If you specify a different user, the current user must have privileges to create a procedure in that schema.
+name: The name of the procedure. The name of the procedure, by convention, should start with a verb e.g., put_line
+parameters: the optional list of parameters. Please refer to the PL/SQL function for more information on parameters with different modes IN, OUTand IN OUT.
+AUTHID: The optional AUHTIDdetermines whether the procedure will execute with the privileges of the owner ( DEFINER) of the procedure or with the privileges of the current user specified by CURRENT_USER.
+
+RETURN statement in the procedure is used only to halt the execution of the procedure and return control to the caller. The RETURNstatement in procedure does not take any expression or constant.
+-->
+CREATE OR REPLACE PROCEDURE adjust_salary(
+    in_employee_id IN EMPLOYEES.EMPLOYEE_ID%TYPE,
+    in_percent IN NUMBER
+) IS
+BEGIN
+   -- update employee's salary
+   UPDATE employees
+   SET salary = salary + salary * in_percent / 100
+   WHERE employee_id = in_employee_id;
+END;
+--A procedure without parameters or with parameters can be called directly by using EXEC statement or EXECUTE statement followed by the name of the procedure 
+
+-- Call the procedure to adjust employee salary
+BEGIN
+    -- before adjustment
+SELECT salary FROM employees WHERE employee_id = 200;
+-- call procedure
+exec adjust_salary(200,5);
+-- after adjustment
+SELECT salary FROM employees WHERE employee_id = 200;
+END;
+/
+---------------------------------------
+CREATE OR REPLACE PROCEDURE insert_employee (
+    p_employee_id NUMBER,
+    p_first_name VARCHAR2,
+    p_last_name VARCHAR2,
+    p_salary NUMBER
+) IS
+BEGIN
+    INSERT INTO employee (employee_id, first_name, last_name, salary)
+    VALUES (p_employee_id, p_first_name, p_last_name, p_salary);
+    COMMIT; -- Commit the transaction
+END insert_employee;
+
+-- Call the procedure to insert a new employee
+BEGIN
+    CALL insert_employee(101, 'John', 'Doe', 50000);
+END;
+/
+
+
+------------------------------
+-- Function Example
+CREATE OR REPLACE FUNCTION calculate_tax (salary NUMBER) RETURN NUMBER IS
+    tax NUMBER;
+BEGIN
+    tax := salary * 0.1; -- Calculate tax as 10% of the salary
+    RETURN tax;          -- Return the calculated tax
+END calculate_tax;
+
+-- Procedure Example
+CREATE OR REPLACE PROCEDURE log_message (message VARCHAR2) IS
+BEGIN
+    INSERT INTO log_table (log_message) VALUES (message);
+END log_message;
+
+
