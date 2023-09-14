@@ -14,6 +14,7 @@ BEGIN
       DBMS_OUTPUT.PUT_LINE('Employee LastName :'||v_last_name);
       DBMS_OUTPUT.PUT_LINE('Employee Id :'||n_employee_id);
       DBMS_OUTPUT.PUT_LINE('Hire Date :'||d_hire_date);
+      DBMS_OUTPUT.PUT_LINE('Hire Date :'||to_char(d_hire_date,'DD/MM/YYYY'));
 END;
 
 2)Anchors :PL/SQL provides you with a very useful feature called variable anchors. It refers to the use of the  %TYPE  keyword to declare a variable with the data type is associated with a column’s data type of a particular column in a table.
@@ -23,12 +24,13 @@ DECLARE
   v_first_name  EMPLOYEES.FIRST_NAME%TYPE:='Anirudha';
   v_last_name   EMPLOYEES.LAST_NAME%TYPE:='Gaikwad';
   n_employee_id EMPLOYEES.EMPLOYEE_ID%TYPE:=103;
-  d_hire_date   EMPLOYEES.HIRE_DATE%TYPE:='01-JAN-2022';
+  d_hire_date   EMPLOYEES.HIRE_DATE%TYPE:='01-JAN-1902';
 BEGIN
       DBMS_OUTPUT.PUT_LINE('Employee Name :'||v_first_name);
       DBMS_OUTPUT.PUT_LINE('Employee LastName :'||v_last_name);
       DBMS_OUTPUT.PUT_LINE('Employee Id :'||n_employee_id);
       DBMS_OUTPUT.PUT_LINE('Hire Date :'||d_hire_date);
+      
 END;
 
 -->

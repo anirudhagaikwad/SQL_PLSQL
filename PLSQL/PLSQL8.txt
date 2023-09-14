@@ -1,7 +1,6 @@
 1) PL/SQL GOTO statement :
- GOTO statement allows you to jump to a specific executable statement in the same execution section of a PL/SQL block.
- 
--->
+GOTO statement allows you to jump to a specific executable statement in the same execution section of a PL/SQL block.
+ -->
 SET SERVEROUTPUT ON SIZE 1000000;
 BEGIN 
   GOTO label_1;

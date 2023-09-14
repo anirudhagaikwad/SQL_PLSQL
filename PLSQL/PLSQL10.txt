@@ -60,7 +60,7 @@ END insert_employee;
 
 -- Call the procedure to insert a new employee
 BEGIN
-    CALL insert_employee(101, 'John', 'Doe', 50000);
+    CALL insert_employee(101, 'Abhi', 'Vishwas', 50000);
 END;
 /
 
