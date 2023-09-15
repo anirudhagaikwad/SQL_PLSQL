@@ -42,16 +42,13 @@ DECLARE
              department_name
       FROM employees e
       INNER JOIN departments d ON d.manager_id = e.employee_id;
-
   r_chief cur_chief%ROWTYPE;
 BEGIN
   OPEN cur_chief;
   LOOP
     -- fetch information from cursor into record
     FETCH cur_chief INTO r_chief;
-
     EXIT WHEN cur_chief%NOTFOUND;
-
     -- print department - chief
     DBMS_OUTPUT.PUT_LINE(r_chief.department_name || ' - ' ||
                          r_chief.first_name || ',' ||
