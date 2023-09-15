@@ -36,15 +36,18 @@ END;
 --A procedure without parameters or with parameters can be called directly by using EXEC statement or EXECUTE statement followed by the name of the procedure 
 
 -- Call the procedure to adjust employee salary
+DECLARE
+  v_employee_id EMPLOYEES.EMPLOYEE_ID%TYPE := 100;  -- Provide the employee ID you want to adjust
+  v_percent NUMBER := 10;  -- Provide the percentage by which to adjust the salary
 BEGIN
-    -- before adjustment
-SELECT salary FROM employees WHERE employee_id = 200;
--- call procedure
-exec adjust_salary(200,5);
--- after adjustment
-SELECT salary FROM employees WHERE employee_id = 200;
+  adjust_salary(v_employee_id, v_percent);
+  COMMIT; -- You might need to commit the changes, depending on your requirements
 END;
 /
+
+/
+
+
 ---------------------------------------
 CREATE OR REPLACE PROCEDURE insert_employee (
     p_employee_id NUMBER,

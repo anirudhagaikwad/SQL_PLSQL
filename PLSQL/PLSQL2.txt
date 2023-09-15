@@ -7,7 +7,7 @@ SET SERVEROUTPUT ON SIZE 1000000;
 DECLARE
    v_first_name varchar2(20):='Anirudha';
    v_last_name varchar2(20):='Gaikwad';
-   n_employee_id number:=103;
+   n_employee_id CONSTANT number:=103;
    d_hire_date date:='01-JAN-2022';
 BEGIN
       DBMS_OUTPUT.PUT_LINE('Employee Name :'||v_first_name);

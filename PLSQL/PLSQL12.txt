@@ -1,0 +1,189 @@
+PL/SQL Record :
+A PL/SQL record is a composite data structure which consists of multiple fields; each has its own value. The following picture shows an example record that includes first name, last name, email...etc.:
+-->
+DECLARE
+  r_employee EMPLOYEES%ROWTYPE;
+
+BEGIN
+  -- Get employee data of employee id 100
+  SELECT * INTO r_employee 
+  FROM employees
+  WHERE employee_id = 100;
+
+  -- Check if the employee was found
+  IF SQL%FOUND THEN
+    -- Display employee details
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' || r_employee.employee_id);
+    DBMS_OUTPUT.PUT_LINE('First Name: ' || r_employee.first_name);
+    DBMS_OUTPUT.PUT_LINE('Last Name: ' || r_employee.last_name);
+    DBMS_OUTPUT.PUT_LINE('Email: ' || r_employee.email);
+    DBMS_OUTPUT.PUT_LINE('Phone Number: ' || r_employee.phone_number);
+    DBMS_OUTPUT.PUT_LINE('Hire Date: ' || TO_CHAR(r_employee.hire_date, 'YYYY-MM-DD'));
+    DBMS_OUTPUT.PUT_LINE('Job ID: ' || r_employee.job_id);
+    DBMS_OUTPUT.PUT_LINE('Salary: ' || r_employee.salary);
+    DBMS_OUTPUT.PUT_LINE('Commission Pct: ' || r_employee.commission_pct);
+    DBMS_OUTPUT.PUT_LINE('Manager ID: ' || r_employee.manager_id);
+    DBMS_OUTPUT.PUT_LINE('Department ID: ' || r_employee.department_id);
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Employee with ID 100 not found.');
+  END IF;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Employee with ID 100 not found.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
+---------------------------------------------------------
+Programmer-defined record
+The table-based and cursor-based records are good enough when you need to create records based on existing structures.
+
+If you want to create a record whose structure is not based on the existing ones, then you use programmer-defined record.
+
+To declare a programmer-defined record, you use the following steps:
+
+->Define a record type that contains the structure you want in your record.
+->Declare a record based on the record type.
+
+TYPE record_type IS RECORD (
+    field_name1 data_type1 [[NOT NULL] := | DEFAULT default_value],
+    field_name2 data_type2 [[NOT NULL] := | DEFAULT default_value],
+    ...
+);
+
+-->
+DECLARE
+  TYPE employee_record IS RECORD (
+    employee_id NUMBER(6),
+    first_name VARCHAR2(20),
+    last_name VARCHAR2(25),
+    email VARCHAR2(25),
+    phone_number VARCHAR2(20),
+    hire_date DATE,
+    job_id VARCHAR2(10),
+    salary NUMBER(8, 2),
+    commission_pct NUMBER(2, 2),
+    manager_id NUMBER(6),
+    department_id NUMBER(4)
+  );
+
+  r_employee employee_record;
+
+BEGIN
+  -- Get employee data of employee id 100
+  SELECT
+    employee_id,
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    hire_date,
+    job_id,
+    salary,
+    commission_pct,
+    manager_id,
+    department_id
+  INTO r_employee
+  FROM employees
+  WHERE employee_id = 100;
+
+  -- Check if the employee was found
+  IF SQL%FOUND THEN
+    -- Display employee details
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' || r_employee.employee_id);
+    DBMS_OUTPUT.PUT_LINE('First Name: ' || r_employee.first_name);
+    DBMS_OUTPUT.PUT_LINE('Last Name: ' || r_employee.last_name);
+    DBMS_OUTPUT.PUT_LINE('Email: ' || r_employee.email);
+    DBMS_OUTPUT.PUT_LINE('Phone Number: ' || r_employee.phone_number);
+    DBMS_OUTPUT.PUT_LINE('Hire Date: ' || TO_CHAR(r_employee.hire_date, 'YYYY-MM-DD'));
+    DBMS_OUTPUT.PUT_LINE('Job ID: ' || r_employee.job_id);
+    DBMS_OUTPUT.PUT_LINE('Salary: ' || r_employee.salary);
+    DBMS_OUTPUT.PUT_LINE('Commission Pct: ' || r_employee.commission_pct);
+    DBMS_OUTPUT.PUT_LINE('Manager ID: ' || r_employee.manager_id);
+    DBMS_OUTPUT.PUT_LINE('Department ID: ' || r_employee.department_id);
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Employee with ID 100 not found.');
+  END IF;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Employee with ID 100 not found.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
+
+
+-->
+DECLARE
+  r_employee EMPLOYEES%ROWTYPE;
+
+BEGIN
+  -- Assign values to the employee record
+  r_employee.employee_id := 208;
+  r_employee.first_name := 'Amit';
+  r_employee.last_name := 'Sharma';
+
+  -- Insert a new employee
+  INSERT INTO EMPLOYEES (
+    employee_id,
+    first_name,
+    last_name,
+    email,           
+    phone_number,    
+    hire_date,       
+    job_id,          
+    salary,          
+    commission_pct,  
+    manager_id,      
+    department_id    
+  ) VALUES (
+    r_employee.employee_id,
+    r_employee.first_name,
+    r_employee.last_name,
+    'sample@email.com',       -- Replace with actual email value
+    '123-456-7890',            -- Replace with actual phone_number value
+    TO_DATE('2023-09-15', 'YYYY-MM-DD'),  -- Replace with actual hire_date value
+    'JOB123',                  -- Replace with actual job_id value
+    50000,                     -- Replace with actual salary value
+    0.05,                      -- Replace with actual commission_pct value
+    101,                       -- Replace with actual manager_id value
+    10                         -- Replace with actual department_id value
+  );
+
+  COMMIT; -- Commit the changes to the database
+  DBMS_OUTPUT.PUT_LINE('New employee inserted successfully.');
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
+
+-->
+DECLARE
+  r_employee EMPLOYEES%ROWTYPE;
+
+BEGIN
+  -- Get employee data of employee id 100
+  SELECT * INTO r_employee 
+  FROM employees
+  WHERE employee_id = 100;
+
+  -- Change the employee's last name
+  r_employee.last_name := 'Gaikwad';
+
+  -- Update the employee
+  UPDATE employees
+  SET 
+    last_name = r_employee.last_name
+  WHERE employee_id = r_employee.employee_id;
+
+  COMMIT; -- Commit the changes to the database
+  DBMS_OUTPUT.PUT_LINE('Employee last name updated successfully.');
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Employee with ID ' || r_employee.employee_id || ' not found.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
+

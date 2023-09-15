@@ -5,34 +5,6 @@ When you work with Oracle database, you work with a complete set of rows returne
 A PL/SQL cursor is a pointer that points to the result set of an SQL query against database tables.
 
 -->
--- Declare variables to hold cursor data
-DECLARE
-  v_first_name employees.first_name%TYPE;
-  v_last_name employees.last_name%TYPE;
-  v_department_name departments.department_name%TYPE;
-BEGIN
-  -- Open the cursor
-  OPEN cur_chief;
-
-  -- Loop through the cursor's result set
-  LOOP
-    -- Fetch data from the cursor into variables
-    FETCH cur_chief INTO v_first_name, v_last_name, v_department_name;
-
-    -- Exit the loop when there are no more rows to fetch
-    EXIT WHEN cur_chief%NOTFOUND;
-
-    -- Display the fetched data
-    DBMS_OUTPUT.PUT_LINE('First Name: ' || v_first_name);
-    DBMS_OUTPUT.PUT_LINE('Last Name: ' || v_last_name);
-    DBMS_OUTPUT.PUT_LINE('Department Name: ' || v_department_name);
-  END LOOP;
-
-  -- Close the cursor
-  CLOSE cur_chief;
-END;
-/
-----------------------------------------------------
 SET SERVEROUTPUT ON SIZE 1000000;
 DECLARE
   -- declare a cursor
