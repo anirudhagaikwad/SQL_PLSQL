@@ -161,7 +161,6 @@ END;
 -->
 DECLARE
   r_employee EMPLOYEES%ROWTYPE;
-
 BEGIN
   -- Get employee data of employee id 100
   SELECT * INTO r_employee 

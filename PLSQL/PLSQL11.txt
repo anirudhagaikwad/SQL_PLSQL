@@ -7,6 +7,36 @@ A PL/SQL cursor is a pointer that points to the result set of an SQL query again
 -->
 SET SERVEROUTPUT ON SIZE 1000000;
 DECLARE
+  -- declare variables to store fetched data
+  l_first_name employees.first_name%TYPE;
+  l_last_name employees.last_name%TYPE;
+  l_department_name departments.department_name%TYPE;
+  
+  -- declare a cursor
+  CURSOR cur_chief IS
+      SELECT e.first_name,
+             e.last_name,
+             d.department_name
+      FROM employees e
+      INNER JOIN departments d ON d.manager_id = e.employee_id;
+BEGIN
+  OPEN cur_chief;
+  LOOP
+    -- fetch information from cursor into variables
+    FETCH cur_chief INTO l_first_name, l_last_name, l_department_name;
+    EXIT WHEN cur_chief%NOTFOUND;
+    -- print department - chief
+    DBMS_OUTPUT.PUT_LINE(l_department_name || ' - ' ||
+                         l_first_name || ',' ||
+                         l_last_name);
+  END LOOP;
+  -- close cursor cur_chief
+  CLOSE cur_chief;
+END;
+
+-->
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
   -- declare a cursor
   CURSOR cur_chief IS
       SELECT first_name,
