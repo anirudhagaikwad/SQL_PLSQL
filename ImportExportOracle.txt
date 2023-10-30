@@ -1,0 +1,46 @@
+##Exporting SQL Data from ORACLE:##
+
+1. Open a command prompt or terminal window.
+
+2. Use SQL*Plus to connect to your Oracle database:
+-->
+   sqlplus username/password@db_instance
+  
+   Replace `username`, `password`, and `db_instance` with your actual Oracle credentials and database instance.
+
+3. To export data to a SQL file, you can use the `spool` command. For example:
+-->
+   spool export_data.sql
+
+4. Write your SQL query or commands to extract the data. For example:
+-->
+   SELECT * FROM your_table;
+
+5. To end the spooling, type:
+-->   spool off
+
+
+6. Exit SQL*Plus:
+-->
+   exit
+   
+------------------------------------------------------------------------------------------------------------------------
+##Importing SQL Data in ORACLE:##
+
+1. Open a command prompt or terminal window.
+
+2. Use SQL*Plus to connect to your Oracle database as before:
+-->
+   sqlplus username/password@db_instance
+
+3. To run the SQL script you've exported, use the `@` symbol followed by the script's file path:
+-->
+   @import_data.sql
+
+eg.->@d:\pls.sql
+   
+   Replace `import_data.sql` with the actual file path to your SQL script.
+
+4. SQL*Plus will execute the commands in the script, importing the data into the database.
+
+Keep in mind that this is a basic method, and for more complex tasks or larger datasets, you might want to consider using Oracle Data Pump (expdp and impdp) or a database management tool like SQL Developer, which provides more advanced features and options for exporting and importing data.

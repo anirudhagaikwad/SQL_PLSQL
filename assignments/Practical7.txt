@@ -1,0 +1,16 @@
+1) Write a PL/SQL block to retrieve the first 3 characters of each employee's last name in the employees table.
+
+2) Write a PL/SQL block to differentiate between CHAR and VARCHAR2 datatype. 
+
+3)Write a PL/SQL Function to check whether a given number is positive, negative or zero.
+Input: -5
+Output: The number -5 is a negative number
+
+4)Write a PL/SQL function to arrange the number of two variable in such a way that the 
+small number will store in num_small variable and large number will store in num_large variable.
+
+5)Write a PL/SQL block that prompts the user to enter a string and removes any leading and trailing zeros from it. Display the trimmed string.
+Input: 00000test string00000
+Output: Trimmed String: [test string]
+
+6)Write a procedure in PL/SQL to display a cursor based detail information of employees from employees table.

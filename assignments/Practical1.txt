@@ -1,8 +1,11 @@
-1)create database for super market and add coloumns itemname,itemunit,price,current_qty
-2)Add 10 items in table
-3)Add minPrice,maxPrice coloumn into table
-4)Add values into minPrice,maxPrice coloumn
-5)Alter first and last row values from minPrice,maxPrice coloumn
-6)Show table values
-7)show table Structure
-8)Delete 5th row from table
+1)Create database for super market 
+2)Create table stock and add coloumns itemname,itemunit,price,current_qty
+3)Add 10 rows in table
+4)Add minPrice,maxPrice coloumn into table
+5)Add values into minPrice,maxPrice coloumn
+6)Alter first and last row values from minPrice,maxPrice coloumn
+7)Show table values as per price in Ascending order
+8)Show table Structure
+9)Show first 5 rows data
+10)Increase price by into 2 and display new price of items
+11)Show last 3 rows data

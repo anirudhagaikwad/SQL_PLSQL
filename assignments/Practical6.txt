@@ -10,4 +10,8 @@
   Andra           ABC             12              2
   Telangana       QWE             15              3
 4)Write PL/SQL program to find the sum of digits of a number.
-5)write above all program using Procedure
+
+5) WRITE CODE FOR PRINT ODD NUMBERS IN RANGE 2 TO 50 ON CONSOLE
+6) WRITE PROGRAM TO FETCH 1ST ROW VALUE OF SALARY COLUMN FROM
+   EMPLOYEE TABLE AND DISPLAY IT WITH INCREMENT BY 5K
+

@@ -1,3 +1,45 @@
-1) create hospital database , create tables with relationship each other (opd,medical,icu,patientslist,doctorslist)
-and perform all operations which we discussed today 
-opd -> opd id,doctorid,patientid,prescription
+1) find and display all employees who do not have phone numbers
+->  select employee_id,first_name,phone_number from employees where phone_number IS NULL;
+
+2) find and display all employees whose department id is not 6
+->  select employee_id,first_name,last_name,department_id from employees where department_id<>6 order by first_name,last_name LIMIT 10;
+
+3) finds and display all employees whose department id is not 5 and 11
+-> select employee_id,first_name,last_name,department_id from employees where department_id<>5 AND department_id<>11 order by first_name,last_name LIMIT 10;
+
+4) finds and display all employees whose salary is greater than 13,000
+-> select employee_id,first_name,last_name,salary from employees where salary > 13000 order by salary LIMIT 10;
+
+5)finds and display employees in department 8 and have the salary greater than 10,000
+->  select employee_id,first_name,last_name,salary from employees where salary > 10000 AND department_id=8 order by salary LIMIT 10;
+
+6)finds all employees whose salaries are less than 10,000
+->  select employee_id,first_name,last_name,salary from employees where salary < 10000 order by salary LIMIT 10;
+
+7)gets all the employees who are not working in the departments 1, 2, or 3.
+->  select employee_id,first_name,last_name,department_id from employees where department_id NOT IN(1,2,3) order by department_id LIMIT 10;
+
+8)retrieves all the employees whose first names do not start with the letter 'B'.
+-> select employee_id,first_name,last_name from employees where first_name NOT LIKE 'B%' order by first_name LIMIT 10;
+
+9)finds all employees whose salaries are greater than the highest salary of employees in the Marketing department whose id is 2
+-> select first_name,last_name,salary from employe
+es where salary> ALL ( select salary from employees where department_id=2) o
+rder by salary;
+
+10)find all the employees who joined the company between 1997 and 1998
+->  select employee_id,first_name,last_name,year(hire_date) joined_year from employees where year(hire_date) BETWEEN 1997 and 1998 order by hire_date;
+
+11)find all employees whose salaries are equal to the average salary of their department
+-> select first_name,last_name,salary from employe
+es where salary= ANY(select AVG(salary) from employees Group by department_i
+d) order by first_name,last_name,salary;
+
+12)find all employees who joined the company between January 1, 1999, and December 31, 2000
+->  select employee_id,first_name,last_name,hire_da
+te from employees where hire_date BETWEEN '1999-01-01' AND '2000-12-31' orde
+r by hire_date;
+
+13)find employees who work in the Marketing and Sales departments
+->  select employee_id,first_name,last_name,departm
+ent_id from employees where department_id IN(2,8);

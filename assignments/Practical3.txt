@@ -1,10 +1,26 @@
-1)use hospital database 
-and perform all operations which we discussed today
-2)show list of doctors with their experience without add column into table 
-sample Column  -> doctid doctname doctjoin doctexpinhospitl 
-3)show list of patients who conselt doct in opd in curent year
-sample -> patientname doctname appointment
-4)create new table 'visiting_doctor' and copy some doctors into that table from existing doctor list table
-5)show patient and doctor list from opd,doctorlist,medical table using single query
-sample -> patientName apointmentDate DoctorName Pricription Medicine
+A) write the following query using an INNER JOIN
+
+1. Retrieve a list of employees with their first and last names and the name of their departments.
+2. Find the total number of employees who have managers, along with their manager's first and last names.
+3. Get a list of employees and their job titles (job_id).
+4. Calculate the total salary of all employees in the company.
+5. List all employees and their email addresses, but only those who belong to a department.
+
+B) write the following query using an LEFT JOIN 
+
+1. Retrieve a list of all employees and their corresponding departments, including employees who do not belong to any department.
+2. Find the total number of employees who have managers, including those who don't have managers.
+3. Get a list of all departments and their respective managers, even if a department doesn't have a manager assigned.
+4. List all employees and their job titles (job_id), including employees who haven't been assigned a job.
+5. Calculate the total salary of all employees, and also include employees who don't belong to any department.
+
+C) write the following query using an RIGHT JOIN 
+
+1. Retrieve a list of all departments and their respective managers, even if some managers are not currently assigned to a department.
+2. Find the total number of employees who have managers, and also include managers who are not assigned any employees.
+3. Get a list of employees and their job titles (job_id), including job titles that are not currently assigned to any employee.
+4. Calculate the total salary of all employees, and also include any additional records from the job table that don't have corresponding employees.
+-> 
+5. List all employees and their email addresses, and also include any additional records from the employee table that don't belong to any department.
+
 

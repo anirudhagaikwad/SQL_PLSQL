@@ -1,3 +1,13 @@
+1)use hospital database 
+and perform all operations which we discussed today
+2)show list of doctors with their experience without add column into table 
+sample Column  -> doctid doctname doctjoin doctexpinhospitl 
+3)show list of patients who conselt doct in opd in curent year
+sample -> patientname doctname appointment
+4)create new table 'visiting_doctor' and copy some doctors into that table from existing doctor list table
+5)show patient and doctor list from opd,doctorlist,medical table using single query
+sample -> patientName apointmentDate DoctorName Pricription Medicine
+
 mysql> select doctor_id,doctor_name,case when salary>="150000" then "5 years" when salary<150000 then "2 years" end as experience from doctor_list order by salary desc;
 mysql> select patient_id,doctor_id,case when doctor_id="OPD002" then "7/12/2022 5-7PM" when doctor_id="OPD007" then "7/12/2022 7-9PM" end as appointments from opd order by opd_id;
 mysql> create table visting_doctor(doctor_name varchar(20),doctor_id varchar(10),salary int(20));
