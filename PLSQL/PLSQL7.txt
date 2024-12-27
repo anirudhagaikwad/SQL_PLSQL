@@ -6,6 +6,62 @@ LOOP
 END LOOP;
 
 By default, the loop iterates in the upward fashion from the lower_bound to the higher_bound. However, if you want to force the loop to iterate in a downward way from the higher_bound to the lower_bound, you can use the REVERSE keyword after the IN keyword.
+
+In PL/SQL, the lower bound and higher bound in a `FOR` loop define the starting and ending values of the loop iteration. They specify the range for the loop counter.
+
+---
+
+### Key Concepts
+1. Lower Bound:
+   - The value where the loop starts.
+   - Specified as the first value in the `FOR` loop range.
+
+2. Higher Bound:
+   - The value where the loop ends.
+   - Specified as the last value in the `FOR` loop range.
+
+---
+
+### Syntax
+
+FOR counter_variable IN lower_bound..higher_bound LOOP
+    -- Statements to execute in the loop
+END LOOP;
+
+
+### Example
+
+BEGIN
+    FOR i IN 1..5 LOOP
+        DBMS_OUTPUT.PUT_LINE('Iteration: ' || i);
+    END LOOP;
+END;
+
+
+
+---
+
+### Points to Note
+1. The range is specified using `..` (double dots).
+2. The loop counter (`i` in the example) automatically increments by `1` during each iteration.
+3. The loop stops after the higher bound is reached.
+4. The lower bound must be less than or equal to the higher bound. Otherwise, the loop does not execute.
+
+---
+
+### Reverse Loop
+You can iterate in reverse order using `REVERSE`:
+
+BEGIN
+    FOR i IN REVERSE 1..5 LOOP
+        DBMS_OUTPUT.PUT_LINE('Iteration: ' || i);
+    END LOOP;
+END;
+
+
+
+---
+
 -->
 SET SERVEROUTPUT ON SIZE 1000000;
 DECLARE

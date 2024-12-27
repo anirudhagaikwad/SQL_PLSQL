@@ -43,10 +43,6 @@ BEGIN
   adjust_salary(v_employee_id, v_percent);
   COMMIT; -- You might need to commit the changes, depending on your requirements
 END;
-/
-
-/
-
 
 ---------------------------------------
 CREATE OR REPLACE PROCEDURE insert_employee (
@@ -65,7 +61,7 @@ END insert_employee;
 BEGIN
     CALL insert_employee(101, 'Abhi', 'Vishwas', 50000);
 END;
-/
+
 
 
 ------------------------------

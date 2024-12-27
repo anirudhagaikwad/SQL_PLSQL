@@ -20,7 +20,7 @@ Triggers are primarily used to enforce business rules, maintain audit trails, va
 ---
 
 ### Syntax of a DML Trigger
-```sql
+
 CREATE [OR REPLACE] TRIGGER trigger_name
 {BEFORE | AFTER | INSTEAD OF} {INSERT | UPDATE | DELETE}
 ON table_name
@@ -30,15 +30,15 @@ DECLARE
 BEGIN
     -- PL/SQL block to execute when the trigger is fired
 END;
-/
-```
+
+
 
 ---
 
 ### Example: BEFORE INSERT Trigger
 This trigger automatically checks and updates a column before a new row is inserted.
 
-```sql
+
 CREATE OR REPLACE TRIGGER before_insert_employee
 BEFORE INSERT ON EMPLOYEES
 FOR EACH ROW
@@ -47,15 +47,15 @@ BEGIN
         :NEW.SALARY := 3000; -- Set minimum salary to 3000
     END IF;
 END;
-/
-```
+
+
 
 ---
 
 ### Example: AFTER UPDATE Trigger
 This trigger records changes in a log table after an update is made.
 
-```sql
+
 CREATE OR REPLACE TRIGGER after_update_employee
 AFTER UPDATE ON EMPLOYEES
 FOR EACH ROW
@@ -63,15 +63,15 @@ BEGIN
     INSERT INTO EMPLOYEE_LOG (EMPLOYEE_ID, OLD_SALARY, NEW_SALARY, CHANGE_DATE)
     VALUES (:OLD.EMPLOYEE_ID, :OLD.SALARY, :NEW.SALARY, SYSDATE);
 END;
-/
-```
+
+
 
 ---
 
 ### Example: INSTEAD OF Trigger
 This trigger allows updates on a view.
 
-```sql
+
 CREATE OR REPLACE TRIGGER instead_of_view_update
 INSTEAD OF UPDATE ON employee_view
 FOR EACH ROW
@@ -80,8 +80,8 @@ BEGIN
     SET FIRST_NAME = :NEW.FIRST_NAME, LAST_NAME = :NEW.LAST_NAME
     WHERE EMPLOYEE_ID = :OLD.EMPLOYEE_ID;
 END;
-/
-```
+
+
 
 ---
 

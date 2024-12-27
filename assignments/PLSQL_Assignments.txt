@@ -1,0 +1,129 @@
+1)Calculate total salary by department :
+Write block that iterates through each department in table and calculates the total salary of EMP in that department and print department_name and total_salary
+DECLARE
+    v_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE;
+    v_dept_name DEPARTMENTS.DEPARTMENT_NAME%TYPE;
+    v_total_salary NUMBER;
+BEGIN
+    FOR dept_rec IN (SELECT DEPARTMENT_ID, DEPARTMENT_NAME FROM DEPARTMENTS) LOOP
+        v_dept_id := dept_rec.DEPARTMENT_ID;
+        v_dept_name := dept_rec.DEPARTMENT_NAME;
+
+        SELECT SUM(SALARY)
+        INTO v_total_salary
+        FROM EMPLOYEES
+        WHERE DEPARTMENT_ID = v_dept_id;
+
+        DBMS_OUTPUT.PUT_LINE('Department: ' || v_dept_name || ' | Total Salary: ' || NVL(v_total_salary, 0));
+    END LOOP;
+END;
+
+
+
+2)Display EMP and their regions : iterate through EMP table,for each emp find their region_name using relationship of EMP,DEPT,LOC,COUNTRY,REGIONS tables ,print emp name and their region
+DECLARE
+    v_region_name REGIONS.REGION_NAME%TYPE;
+BEGIN
+    FOR emp_rec IN (SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME, DEPARTMENT_ID FROM EMPLOYEES) LOOP
+        FOR dept_rec IN (SELECT LOCATION_ID FROM DEPARTMENTS WHERE DEPARTMENT_ID = emp_rec.DEPARTMENT_ID) LOOP
+            FOR loc_rec IN (SELECT COUNTRY_ID FROM LOCATIONS WHERE LOCATION_ID = dept_rec.LOCATION_ID) LOOP
+                FOR country_rec IN (SELECT REGION_ID FROM COUNTRIES WHERE COUNTRY_ID = loc_rec.COUNTRY_ID) LOOP
+                    SELECT REGION_NAME
+                    INTO v_region_name
+                    FROM REGIONS
+                    WHERE REGION_ID = country_rec.REGION_ID;
+
+                    DBMS_OUTPUT.PUT_LINE('Employee: ' || emp_rec.FIRST_NAME || ' ' || emp_rec.LAST_NAME || ' | Region: ' || v_region_name);
+                END LOOP;
+            END LOOP;
+        END LOOP;
+    END LOOP;
+END;
+
+
+
+3)Identify Departments with employees in specific regions
+print region_name and name of dept in that region
+
+DECLARE
+    v_region_name REGIONS.REGION_NAME%TYPE;
+    v_department_name DEPARTMENTS.DEPARTMENT_NAME%TYPE;
+BEGIN
+    FOR region_rec IN (SELECT REGION_ID, REGION_NAME FROM REGIONS) LOOP
+        v_region_name := region_rec.REGION_NAME;
+
+        DBMS_OUTPUT.PUT_LINE('Region: ' || v_region_name);
+
+        FOR dept_rec IN (SELECT DEPARTMENT_NAME FROM DEPARTMENTS WHERE DEPARTMENT_ID IN (
+                            SELECT DEPARTMENT_ID
+                            FROM EMPLOYEES
+                            WHERE DEPARTMENT_ID IN (
+                                SELECT DEPARTMENT_ID
+                                FROM DEPARTMENTS
+                                WHERE LOCATION_ID IN (
+                                    SELECT LOCATION_ID
+                                    FROM LOCATIONS
+                                    WHERE COUNTRY_ID IN (
+                                        SELECT COUNTRY_ID
+                                        FROM COUNTRIES
+                                        WHERE REGION_ID = region_rec.REGION_ID
+                                    )
+                                )
+                            )
+                        )) LOOP
+            v_department_name := dept_rec.DEPARTMENT_NAME;
+            DBMS_OUTPUT.PUT_LINE('  Department: ' || v_department_name);
+        END LOOP;
+    END LOOP;
+END;
+
+
+
+4)Count Employees Per Region ,print region_name and employee_count
+
+DECLARE
+    v_region_name REGIONS.REGION_NAME%TYPE;
+    v_employee_count NUMBER;
+BEGIN
+    FOR region_rec IN (SELECT REGION_ID, REGION_NAME FROM REGIONS) LOOP
+        v_region_name := region_rec.REGION_NAME;
+
+        SELECT COUNT(*)
+        INTO v_employee_count
+        FROM EMPLOYEES
+        WHERE DEPARTMENT_ID IN (
+            SELECT DEPARTMENT_ID
+            FROM DEPARTMENTS
+            WHERE LOCATION_ID IN (
+                SELECT LOCATION_ID
+                FROM LOCATIONS
+                WHERE COUNTRY_ID IN (
+                    SELECT COUNTRY_ID
+                    FROM COUNTRIES
+                    WHERE REGION_ID = region_rec.REGION_ID
+                )
+            )
+        );
+
+        DBMS_OUTPUT.PUT_LINE('Region: ' || v_region_name || ' | Employee Count: ' || v_employee_count);
+    END LOOP;
+END;
+
+5)Categorize Employees Based on Salary
+DECLARE
+    v_salary_category VARCHAR2(20);
+BEGIN
+    FOR emp_rec IN (SELECT FIRST_NAME, LAST_NAME, SALARY FROM EMPLOYEES) LOOP
+        CASE
+            WHEN emp_rec.SALARY < 5000 THEN
+                v_salary_category := 'Low Salary';
+            WHEN emp_rec.SALARY BETWEEN 5000 AND 10000 THEN
+                v_salary_category := 'Medium Salary';
+            ELSE
+                v_salary_category := 'High Salary';
+        END CASE;
+
+        DBMS_OUTPUT.PUT_LINE('Employee: ' || emp_rec.FIRST_NAME || ' ' || emp_rec.LAST_NAME || ' | Salary: ' || emp_rec.SALARY || ' | Category: ' || v_salary_category);
+    END LOOP;
+END;
+

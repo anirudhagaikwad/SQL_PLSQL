@@ -33,7 +33,7 @@ EXCEPTION
   WHEN OTHERS THEN
     DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
 END;
-/
+
 ---------------------------------------------------------
 Programmer-defined record
 The table-based and cursor-based records are good enough when you need to create records based on existing structures.
@@ -110,7 +110,6 @@ EXCEPTION
   WHEN OTHERS THEN
     DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
 END;
-/
 
 
 -->
@@ -156,7 +155,7 @@ EXCEPTION
   WHEN OTHERS THEN
     DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
 END;
-/
+
 
 -->
 DECLARE
@@ -184,5 +183,5 @@ EXCEPTION
   WHEN OTHERS THEN
     DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
 END;
-/
+
 

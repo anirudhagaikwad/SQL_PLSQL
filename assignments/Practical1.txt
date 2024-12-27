@@ -1,7 +1,7 @@
 1)Create database for super market 
-2)Create table stock and add coloumns itemname,itemunit,price,current_qty
+2)Create table stock(stock_id,item_name,item_unit,price,current_qty) and Unit(unit_id,unit_name) 
 3)Add 10 rows in table
-4)Add minPrice,maxPrice coloumn into table
+4)Add minPrice,maxPrice coloumn into table stock
 5)Add values into minPrice,maxPrice coloumn
 6)Alter first and last row values from minPrice,maxPrice coloumn
 7)Show table values as per price in Ascending order
@@ -9,3 +9,4 @@
 9)Show first 5 rows data
 10)Increase price by into 2 and display new price of items
 11)Show last 3 rows data
+
