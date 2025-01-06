@@ -17,6 +17,25 @@ Triggers are primarily used to enforce business rules, maintain audit trails, va
    - Server errors.
    - Database startup/shutdown.
 
+### Trigger Execution Context
+
+1. :NEW: Refers to the new values of the row being affected.
+2. :OLD: Refers to the old values of the row being affected.
+3. Mutating Tables: Triggers cannot directly modify the table they are defined on during execution (to prevent infinite loops).
+
+---
+
+### Advantages of Triggers
+- Enforces business rules automatically.
+- Ensures data integrity.
+- Tracks changes for audit purposes.
+- Automates repetitive tasks.
+
+### Disadvantages of Triggers
+- Can make debugging and maintenance harder.
+- May impact performance if overused.
+- Limited flexibility with some operations (e.g., complex validations).
+
 ---
 
 ### Syntax of a DML Trigger
@@ -34,6 +53,22 @@ END;
 
 
 ---
+### Automatically update the "last_updated" column of a table whenever a record is updated.
+
+CREATE OR REPLACE TRIGGER update_last_updated_trigger
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    :NEW.last_updated := SYSDATE;
+END;
+
+### If a user updates any row in the employees table, the trigger automatically updates the last_updated column 
+    without needing explicit action from the user.
+
+UPDATE employees
+SET salary = salary + 500
+WHERE employee_id = 101;
+
 
 ### Example: BEFORE INSERT Trigger
 This trigger automatically checks and updates a column before a new row is inserted.
@@ -80,29 +115,6 @@ BEGIN
     SET FIRST_NAME = :NEW.FIRST_NAME, LAST_NAME = :NEW.LAST_NAME
     WHERE EMPLOYEE_ID = :OLD.EMPLOYEE_ID;
 END;
-
-
-
----
-
-### Trigger Execution Context
-
-1. :NEW: Refers to the new values of the row being affected.
-2. :OLD: Refers to the old values of the row being affected.
-3. Mutating Tables: Triggers cannot directly modify the table they are defined on during execution (to prevent infinite loops).
-
----
-
-### Advantages of Triggers
-- Enforces business rules automatically.
-- Ensures data integrity.
-- Tracks changes for audit purposes.
-- Automates repetitive tasks.
-
-### Disadvantages of Triggers
-- Can make debugging and maintenance harder.
-- May impact performance if overused.
-- Limited flexibility with some operations (e.g., complex validations).
 
 ---
 

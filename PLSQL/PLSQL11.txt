@@ -62,8 +62,14 @@ END;
 
 --------------------------------------------------------------------------
     Attribute           	Description
-cursor_name%FOUND	returns TRUEif record was fetched successfully by cursor cursor_name
-cursor_name%NOTFOUND	returns TRUEif record was not fetched successfully by cursor cursor_name
-cursor_name%ROWCOUNT	returns the number of records fetched from the cursor cursor_nameat the time we test %ROWCOUNT attribute
-cursor_name%ISOPEN	returns TRUEif the cursor cursor_nameis open
+cursor_name%FOUND	returns TRUE if record was fetched successfully by cursor 
+                        cursor_name
+
+cursor_name%NOTFOUND	returns TRUEif record was not fetched successfully by cursor 
+                        cursor_name
+
+cursor_name%ROWCOUNT	returns the number of records fetched from the cursor  
+                        cursor_name at the time we test %ROWCOUNT attribute
+
+cursor_name%ISOPEN	returns TRUE if the cursor cursor_name is open
 ----------------------------------------------------------------------------

@@ -9,4 +9,5 @@
 9)Show first 5 rows data
 10)Increase price by into 2 and display new price of items
 11)Show last 3 rows data
+12)create new table 'items(item_name,item_unit) and insert all values from stock table
 

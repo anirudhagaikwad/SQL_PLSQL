@@ -1,0 +1,495 @@
+In Oracle SQL Developer, you don't use commands like `SHOW TABLES` or `SHOW DATABASES` directly as in MySQL. Instead, Oracle provides other ways to list tables and schemas (equivalent to databases in MySQL). Here's how you can do it:
+
+---
+
+### 1. List All Databases (Schemas)
+In Oracle, databases are referred to as schemas. To list all schemas, you can query the `ALL_USERS` or `DBA_USERS` views:
+
+
+SELECT username FROM all_users;
+```
+
+If you have DBA privileges, you can also use:
+
+
+SELECT username FROM dba_users;
+```
+
+---
+
+### 2. List All Tables in the Current Schema
+To see the tables owned by the current user, query the `USER_TABLES` view:
+
+
+SELECT table_name FROM user_tables;
+```
+
+---
+
+### 3. List All Tables Across All Schemas
+If you want to list tables from all schemas and you have the necessary privileges, query the `ALL_TABLES` or `DBA_TABLES` views:
+
+
+SELECT owner, table_name FROM all_tables;
+```
+
+Or, if you are a DBA:
+
+
+SELECT owner, table_name FROM dba_tables;
+```
+
+---
+
+### 4. Use Oracle SQL Developer GUI
+If you prefer a graphical interface in Oracle SQL Developer:
+- List Databases (Schemas): In the "Connections" pane, expand the connection. You will see the schemas available under "Other Users."
+- List Tables: Expand your schema (or another schema if you have access) in the "Connections" pane, then click on "Tables" to view all tables.
+
+---
+
+### Summary Table
+  
+| Action                      | MySQL Command            | Oracle Command / GUI                                            |
+|-----------------------------|--------------------------|-----------------------------------------------------------------|
+| List Databases              | `SHOW DATABASES;`        | Query `ALL_USERS` or check "Other Users" in the Connections pane |
+| List Tables in Current DB   | `SHOW TABLES;`           | Query `USER_TABLES` or check "Tables" in the Connections pane    |
+| List Tables Across Schemas  | N/A                      | Query `ALL_TABLES` or `DBA_TABLES` if you have privileges        |
+
+
+
+In Oracle installations, the `init.ora` and `spfile.ora` files are critical configuration files for initializing the database. Here's how you can locate these files on Windows 11:
+
+---
+
+### 1. Default Location for `init.ora` and `spfile.ora`
+- By default, these files are stored in the Oracle Home directory under the `dbs` or `database` folder:
+  ```
+  <ORACLE_HOME>\dbs\    (for init.ora)
+  <ORACLE_HOME>\dbs\    (for spfile.ora)
+  ```
+  Example:
+  ```
+  C:\oracle\product\21c\dbhomeXE\dbs\
+  ```
+
+- For Oracle Express Edition (XE):
+  ```
+  C:\app\<your_username>\product\21c\dbhomeXE\dbs\
+  ```
+
+---
+
+### 2. Identify Oracle Home Directory
+The Oracle Home directory is where Oracle was installed. To find it:
+1. Open a Command Prompt or PowerShell.
+2. Run the following command:
+   ```cmd
+   echo %ORACLE_HOME%
+   ```
+   This will display the directory where Oracle is installed.
+
+---
+
+### 3. Searching for the Files
+If you're unsure of the exact location, you can search for the files:
+1. Open File Explorer.
+2. In the search bar, type:
+   ```
+   init*.ora OR spfile*.ora
+   ```
+
+---
+
+### 4. Verifying the Files
+- `init.ora`: A plain text file. You can open it with any text editor like Notepad.
+- `spfile.ora`: A binary file. You cannot directly edit it, but you can convert it to `init.ora` format for editing using SQL*Plus.
+
+---
+
+### 5. Converting Between `spfile.ora` and `init.ora`
+If you only have the `spfile.ora` and want to edit parameters:
+1. Open SQL*Plus as `SYSDBA`:
+   ```cmd
+   sqlplus / as sysdba
+   ```
+2. Create an editable `init.ora` from the `spfile.ora`:
+   
+   CREATE PFILE='C:\path_to\init.ora' FROM SPFILE;
+   ```
+3. After editing `init.ora`, you can convert it back:
+   
+   CREATE SPFILE='C:\path_to\spfile.ora' FROM PFILE;
+   ```
+
+---
+
+### 6. File Usage
+- Oracle uses `spfile.ora` by default if it exists. If not, it looks for `init.ora`.
+- To check which file is in use, run:
+  
+  SHOW PARAMETER spfile;
+  ```
+
+---
+
+Resolving Oracle memory errors during database creation typically involves adjusting the system memory allocations for Oracle's processes like SGA (System Global Area) and PGA (Program Global Area). These errors often occur due to insufficient memory resources or incorrect configuration. Here are the steps to resolve the issue:
+
+---
+
+### 1. Check Available System Memory
+Ensure your system has enough memory to support the Oracle instance:
+- Use Task Manager (Windows) or `top/free` commands (Linux) to check available RAM.
+- Oracle XE versions like 21c have memory limitations (e.g., 4GB for SGA and PGA combined).
+
+---
+
+### 2. Adjust Initialization Parameters
+
+#### a. Modify `MEMORY_TARGET` or `MEMORY_MAX_TARGET`
+If you are using Automatic Memory Management (AMM):
+1. Open the `init.ora` or `spfile.ora` file.
+2. Add or Update the following parameters:
+   
+memory_target=1G
+memory_max_target=1G
+sga_target=500M
+pga_aggregate_target=300M
+
+   ```
+   These values can be increased or decreased depending on your system capacity.
+
+3. Restart the Oracle database:
+   ```bash
+   sqlplus / as sysdba
+   SHUTDOWN IMMEDIATE;
+   STARTUP;
+   ```
+
+---
+
+#### b. Adjust `SGA_TARGET` and `PGA_AGGREGATE_TARGET`
+For manual memory management, modify the `SGA` and `PGA` settings:
+1. Use SQL*Plus or a similar tool to log in as `sysdba`:
+   ```bash
+   sqlplus / as sysdba
+   ```
+
+2. Set the parameters:
+   
+   ALTER SYSTEM SET SGA_TARGET = 512M SCOPE=BOTH;
+   ALTER SYSTEM SET PGA_AGGREGATE_TARGET = 256M SCOPE=BOTH;
+   ```
+
+3. Verify the new settings:
+   
+   SHOW PARAMETER SGA_TARGET;
+   SHOW PARAMETER PGA_AGGREGATE_TARGET;
+   ```
+
+---
+
+### 3. Increase Swap Space
+If the physical memory is insufficient, increase virtual memory (swap space):
+- On Windows: Adjust virtual memory settings through System Properties.
+- On Linux: Increase the swap file size using commands like:
+  ```bash
+  dd if=/dev/zero of=/swapfile bs=1M count=2048
+  mkswap /swapfile
+  swapon /swapfile
+  ```
+
+---
+
+### 4. Use the `DBCA` Tool with Custom Parameters
+If you're using the Database Configuration Assistant (DBCA):
+1. Choose Advanced Configuration.
+2. Manually set the memory allocation during the database creation wizard.
+
+---
+
+### 5. Modify System Configuration for Oracle
+On some systems, you might need to adjust OS-level settings for shared memory and semaphores:
+
+#### For Linux:
+- Edit `/etc/sysctl.conf`:
+  ```bash
+  kernel.shmmax=1073741824  # Maximum shared memory (adjust based on system memory)
+  kernel.shmall=2097152     # Total shared memory pages
+  ```
+- Apply the changes:
+  ```bash
+  sysctl -p
+  ```
+
+#### For Windows:
+Ensure Oracle's required memory settings are not restricted by Windows' pagefile size or process limitations.
+
+---
+
+### 6. Check the Oracle XE Limitations
+Oracle XE has predefined memory limits:
+- SGA + PGA combined limit is typically 4GB.
+- Ensure your `MEMORY_TARGET` or manual configurations stay within this range.
+
+---
+
+### 7. Consult Logs for Specific Errors
+Check the Oracle logs in the `$ORACLE_BASE/diag` directory for detailed error messages:
+- Look for `alert.log` to identify the exact issue.
+
+---
+
+### 8. Reconfigure Database Creation Settings
+If the error persists, recreate the database with lower memory settings using scripts or DBCA.
+
+---
+
+### Example: Customizing Parameters at Database Creation
+Use SQL scripts to define lower memory limits during database creation:
+
+CREATE DATABASE mydb
+CONTROLFILE REUSE
+SET SGA_TARGET = 512M
+SET PGA_AGGREGATE_TARGET = 256M;
+```
+
+---
+### Default Users in Oracle Database
+Oracle Database comes with several predefined users to manage the system and provide access to built-in features. Below are some of the commonly available default users:
+
+---
+
+### 1. System and Administrative Users
+| User     | Description                                                                                       |
+|--------------|-------------------------------------------------------------------------------------------------------|
+| `SYS`        | The primary administrative user that owns the Oracle data dictionary. Used for database maintenance.  |
+| `SYSTEM`     | A general-purpose administrative user for managing database resources.                                |
+
+---
+
+### 2. Sample Schema Users
+| User     | Description                                                                                       |
+|--------------|-------------------------------------------------------------------------------------------------------|
+| `HR`         | Human Resources schema for sample data (e.g., employees, departments, regions).                      |
+| `SCOTT`      | Demonstration schema with the famous `EMP` and `DEPT` tables.                                         |
+| `OE`         | Order Entry schema for complex business data.                                                        |
+| `SH`         | Sales History schema for analytical queries and business intelligence.                                |
+| `PM`         | Product Media schema for multimedia content.                                                         |
+| `IX`         | Information Exchange schema for e-business transactions.                                             |
+
+---
+
+### 3. Maintenance and Internal Users
+| User           | Description                                                                                   |
+|--------------------|---------------------------------------------------------------------------------------------------|
+| `DBSNMP`           | Used by Oracle Enterprise Manager for database monitoring.                                        |
+| `OUTLN`            | Maintains outlines for query optimization.                                                        |
+| `AUDSYS`           | Stores unified audit data.                                                                        |
+| `ORDDATA`          | Associated with Oracle Multimedia.                                                                |
+| `XDB`              | Enables Oracle XML DB features.                                                                   |
+| `ANONYMOUS`        | Used for external applications requiring web services.                                            |
+| `APPQOSSYS`        | Manages Oracle Database Quality of Service (QoS).                                                 |
+| `CTXSYS`           | Used for Oracle Text features like full-text indexing.                                            |
+
+---
+
+### 4. Locked Users
+Most of these default users are locked and cannot be used until unlocked and assigned a password.
+
+---
+
+### How to Create a New User
+Creating a new user in Oracle Database involves defining the user, assigning a password, and granting appropriate privileges.
+
+---
+
+#### Step 1: Connect to the Database as an Admin
+Use SQL*Plus or any SQL client to connect as an administrative user:
+```bash
+sqlplus / as sysdba
+```
+
+---
+
+#### Step 2: Create the User
+Run the following command to create a user:
+
+CREATE USER new_user IDENTIFIED BY password;
+```
+- `new_user`: Replace with the desired username.
+- `password`: Replace with a strong password.
+
+---
+
+#### Step 3: Grant Privileges
+To allow the user to log in and perform operations:
+1. Grant `CREATE SESSION` to allow connection:
+   
+   GRANT CREATE SESSION TO new_user;
+   ```
+
+2. Optionally, grant additional privileges:
+   - To allow table creation:
+     
+     GRANT CREATE TABLE TO new_user;
+     ```
+   - To make the user an administrator:
+     
+     GRANT DBA TO new_user;
+     ```
+
+---
+
+#### Step 4: Verify the User
+Log in as the new user to verify:
+```bash
+sqlplus new_user/password
+```
+
+---
+
+### How to Unlock a Default User
+If a default user (e.g., `HR`) is locked, you can unlock it using:
+
+ALTER USER HR IDENTIFIED BY hr_password ACCOUNT UNLOCK;
+```
+
+---
+
+
+In Oracle, roles and privileges are essential for managing security and controlling access to database objects. When working with subprograms (procedures, functions, or packages), roles and privileges need special handling because roles are not directly enabled inside PL/SQL subprograms.
+
+---
+
+### How Roles and Privileges Work in Subprograms
+1. Direct Privileges: Subprograms can access database objects if the owner of the subprogram has been granted direct privileges (not through roles).
+2. Roles: Roles are disabled during the execution of PL/SQL subprograms for security reasons.
+3. Invoker's Rights (`AUTHID CURRENT_USER`): Subprograms can be made to execute with the privileges of the caller, allowing roles to be used indirectly.
+
+---
+
+### Key Concepts
+
+#### 1. Definer's Rights (Default Behavior)
+- The subprogram executes with the privileges of the user who defined the subprogram.
+- Roles are not considered; only direct object privileges granted to the owner are used.
+
+#### 2. Invoker's Rights (`AUTHID CURRENT_USER`)
+- The subprogram executes with the privileges of the user who calls the subprogram.
+- Roles assigned to the caller are honored.
+
+---
+
+### Creating Subprograms with Roles and Privileges
+
+#### Example 1: Definer's Rights (Default)
+
+```sql
+CREATE OR REPLACE PROCEDURE fetch_employee_data AS
+BEGIN
+   FOR emp_rec IN (SELECT * FROM employees) LOOP
+      DBMS_OUTPUT.PUT_LINE(emp_rec.employee_id || ' - ' || emp_rec.first_name);
+   END LOOP;
+END;
+/
+```
+
+- In this example:
+  - The `fetch_employee_data` procedure runs with the privileges of the user who created it.
+  - The user must have direct `SELECT` privilege on the `employees` table.
+
+---
+
+#### Example 2: Invoker's Rights
+
+```sql
+CREATE OR REPLACE PROCEDURE fetch_employee_data AUTHID CURRENT_USER AS
+BEGIN
+   FOR emp_rec IN (SELECT * FROM employees) LOOP
+      DBMS_OUTPUT.PUT_LINE(emp_rec.employee_id || ' - ' || emp_rec.first_name);
+   END LOOP;
+END;
+/
+```
+
+- In this case:
+  - The procedure runs with the privileges of the user who calls it (`CURRENT_USER`).
+  - Roles assigned to the invoker are enabled during execution.
+
+---
+
+### Granting Privileges for Subprograms
+
+#### 1. Grant Direct Privileges
+- If using definer's rights, grant direct privileges to the owner of the subprogram:
+  ```sql
+  GRANT SELECT ON employees TO subprogram_owner;
+  ```
+
+#### 2. Use Roles with Invoker's Rights
+- Assign roles to users, and ensure the roles include necessary privileges:
+  ```sql
+  GRANT employee_role TO user_name;
+  ```
+
+- Include necessary privileges in the role:
+  ```sql
+  GRANT SELECT ON employees TO employee_role;
+  ```
+
+---
+
+### Practical Example: Combining Roles and Subprograms
+
+1. Create a Role:
+   ```sql
+   CREATE ROLE employee_role;
+   GRANT SELECT ON employees TO employee_role;
+   ```
+
+2. Grant Role to Users:
+   ```sql
+   GRANT employee_role TO user_name;
+   ```
+
+3. Create a Procedure with Invoker's Rights:
+   ```sql
+   CREATE OR REPLACE PROCEDURE show_employee_data AUTHID CURRENT_USER AS
+   BEGIN
+      FOR emp_rec IN (SELECT employee_id, first_name FROM employees) LOOP
+         DBMS_OUTPUT.PUT_LINE(emp_rec.employee_id || ': ' || emp_rec.first_name);
+      END LOOP;
+   END;
+   /
+   ```
+
+4. Test the Procedure:
+   - Log in as a user with the `employee_role`.
+   - Execute the procedure:
+     ```sql
+     BEGIN
+        show_employee_data;
+     END;
+     /
+     ```
+
+---
+
+### Important Notes
+1. Roles and Packages:
+   - When using roles, avoid using them directly in `AUTHID CURRENT_USER` packages unless necessary.
+   - Always design secure, least-privileged access for your subprograms.
+
+2. Debugging Privilege Issues:
+   - If you encounter privilege errors, verify:
+     - The subprogram owner has direct privileges (for definer's rights).
+     - The invoker has sufficient roles (for invoker's rights).
+
+
+ORA-56752: Oracle Database Express Edition (XE) memory parameter invalid or not specified
+ORA-01078: failure in processing system parameter
+
+{ORACLE_BASE}\oradata\{DB_UNIQUE_NAME}
+
+{ORACLE_BASE}\fast_recovery_area\{DB_UNIQUE_NAME}

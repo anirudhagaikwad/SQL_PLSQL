@@ -1,6 +1,21 @@
 PL/SQL Record :
 A PL/SQL record is a composite data structure which consists of multiple fields; each has its own value. The following picture shows an example record that includes first name, last name, email...etc.:
--->
+PL/SQL provides three ways to declare a record: table-based record, cursor-based record and programmer-defined records.
+-- table-based record
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  r_emp employees%ROWTYPE;
+  n_emp_id  employees.employee_id%TYPE := 150;
+BEGIN
+  SELECT *
+  INTO r_emp
+  FROM employees
+  WHERE employee_id = n_emp_id;
+  -- print out the employee's first name
+  DBMS_OUTPUT.PUT_LINE(r_emp.first_name);
+END;
+
+---
 DECLARE
   r_employee EMPLOYEES%ROWTYPE;
 
@@ -37,9 +52,7 @@ END;
 ---------------------------------------------------------
 Programmer-defined record
 The table-based and cursor-based records are good enough when you need to create records based on existing structures.
-
 If you want to create a record whose structure is not based on the existing ones, then you use programmer-defined record.
-
 To declare a programmer-defined record, you use the following steps:
 
 ->Define a record type that contains the structure you want in your record.
@@ -51,7 +64,7 @@ TYPE record_type IS RECORD (
     ...
 );
 
--->
+---
 DECLARE
   TYPE employee_record IS RECORD (
     employee_id NUMBER(6),
@@ -111,8 +124,27 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
 END;
 
+---
 
--->
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  TYPE t_name IS RECORD(
+     first_name employees.first_name%TYPE,
+     last_name  employees.last_name%TYPE
+  );
+  r_name   t_name; -- name record
+  n_emp_id employees.employee_id%TYPE := 200;
+BEGIN
+  SELECT first_name,
+         last_name
+  INTO r_name
+  FROM employees
+  WHERE employee_id = n_emp_id;
+  -- print out the employee's name
+  DBMS_OUTPUT.PUT_LINE(r_name.first_name || ',' || r_name.last_name );
+END;
+
+---
 DECLARE
   r_employee EMPLOYEES%ROWTYPE;
 
@@ -157,7 +189,7 @@ EXCEPTION
 END;
 
 
--->
+---
 DECLARE
   r_employee EMPLOYEES%ROWTYPE;
 BEGIN

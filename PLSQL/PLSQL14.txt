@@ -1,0 +1,178 @@
+Exception Handling in PL/SQL allows you to catch and handle runtime errors or unexpected conditions that may occur during the execution of your PL/SQL block. By managing exceptions, you can maintain program control and avoid abrupt terminations.
+
+---
+
+### Structure of Exception Handling in PL/SQL
+
+A PL/SQL block includes an EXCEPTION section where you can define how to handle errors. 
+
+
+DECLARE
+   -- Declarations
+BEGIN
+   -- Executable Statements
+EXCEPTION
+   -- Exception Handling
+   WHEN exception_name1 THEN
+      -- Code to handle exception_name1
+   WHEN exception_name2 THEN
+      -- Code to handle exception_name2
+   WHEN OTHERS THEN
+      -- Code to handle all other exceptions
+END;
+
+
+---
+
+### Types of Exceptions
+1. Predefined Exceptions  
+   Oracle provides built-in exceptions for common errors like `NO_DATA_FOUND`, `TOO_MANY_ROWS`, `ZERO_DIVIDE`, etc.
+
+2. User-Defined Exceptions  
+   You can declare and raise your own exceptions using the `EXCEPTION` and `RAISE` statements.
+
+---
+
+### Common Predefined Exceptions
+
+| Exception Name        | Error Code     | Description                                          |
+|-----------------------|----------------|------------------------------------------------------|
+| `NO_DATA_FOUND`       | ORA-01403      | No rows were returned by a SELECT INTO statement.    |
+| `TOO_MANY_ROWS`       | ORA-01422      | A SELECT INTO statement returned more than one row.  |
+| `ZERO_DIVIDE`         | ORA-01476      | Attempt to divide a number by zero.                  |
+| `INVALID_NUMBER`      | ORA-01722      | Conversion of a string to a number failed.           |
+| `OTHERS`              | N/A            | Handles all other exceptions not explicitly handled. |
+
+---
+
+### Example: Predefined Exception Handling
+
+#### Example 1: Handling Division by Zero
+
+DECLARE
+   num1 NUMBER := 10;
+   num2 NUMBER := 0;
+   result NUMBER;
+BEGIN
+   result := num1 / num2;
+   DBMS_OUTPUT.PUT_LINE('Result: ' || result);
+EXCEPTION
+   WHEN ZERO_DIVIDE THEN
+      DBMS_OUTPUT.PUT_LINE('Error: Division by zero is not allowed.');
+END;
+
+```
+
+### User-Defined Exceptions
+
+#### Example 2: Defining and Raising Custom Exceptions
+
+DECLARE
+   insufficient_salary EXCEPTION;
+   salary NUMBER := 2000;
+BEGIN
+   IF salary < 3000 THEN
+      RAISE insufficient_salary;
+   END IF;
+
+   DBMS_OUTPUT.PUT_LINE('Salary is sufficient.');
+EXCEPTION
+   WHEN insufficient_salary THEN
+      DBMS_OUTPUT.PUT_LINE('Error: Salary is below the required minimum.');
+END;
+
+
+---
+
+### WHEN OTHERS Clause
+The `WHEN OTHERS` clause acts as a catch-all for exceptions not explicitly handled. However, use it carefully as it can mask specific errors.
+
+#### Example 3: Using WHEN OTHERS
+
+BEGIN
+   -- Some operation
+   DBMS_OUTPUT.PUT_LINE(1 / 0);  -- This will cause a division by zero error
+EXCEPTION
+   WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('An unexpected error occurred.');
+END;
+
+---
+
+### Logging and Re-Raising Exceptions
+You can log an error and optionally re-raise it using the `RAISE` keyword.
+
+#### Example 4: Logging and Re-Raising Exceptions
+
+DECLARE
+   insufficient_salary EXCEPTION;
+   salary NUMBER := 2000;
+BEGIN
+   IF salary < 3000 THEN
+      RAISE insufficient_salary;
+   END IF;
+
+   DBMS_OUTPUT.PUT_LINE('Salary is sufficient.');
+EXCEPTION
+   WHEN insufficient_salary THEN
+      DBMS_OUTPUT.PUT_LINE('Logging Error: Salary too low.');
+      RAISE; -- Re-raise the exception if needed
+END;
+
+---
+
+SET SERVEROUTPUT ON SIZE 100000;
+DECLARE
+  -- define exceptions
+  BELOW_SALARY_RANGE EXCEPTION;
+  ABOVE_SALARY_RANGE EXCEPTION;
+  -- salary variables
+  n_salary employees.salary%TYPE;
+  n_min_salary employees.salary%TYPE;
+  n_max_salary employees.salary%TYPE;
+  -- input employee id
+  n_emp_id employees.employee_id%TYPE := &emp_id;
+BEGIN
+  SELECT salary,
+         min_salary,
+         max_salary
+  INTO n_salary,
+       n_min_salary,
+       n_max_salary
+  FROM employees
+  INNER JOIN jobs ON jobs.job_id = employees.job_id
+  WHERE employee_id = n_emp_id;
+
+  IF n_salary < n_min_salary THEN
+     RAISE BELOW_SALARY_RANGE;
+  ELSIF n_salary > n_max_salary THEN
+      RAISE ABOVE_SALARY_RANGE;
+  END IF;
+
+  dbms_output.put_line('Employee ' || n_emp_id ||
+                               ' has salary $' || n_salary ); 
+
+  EXCEPTION
+    WHEN BELOW_SALARY_RANGE THEN
+      dbms_output.put_line('Employee ' || n_emp_id ||
+			  ' has salary below the salary range');
+    WHEN ABOVE_SALARY_RANGE THEN
+      dbms_output.put_line('Employee ' || n_emp_id ||
+			  ' has salary above the salary range');
+    WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('Employee ' || n_emp_id || ' not found');
+END;
+
+
+### Best Practices for Exception Handling
+1. Catch Specific Exceptions First: Handle specific exceptions before the `WHEN OTHERS` clause.
+2. Log Errors: Use error logging mechanisms to record details of unexpected errors.
+3. Avoid Overusing WHEN OTHERS: Only use it for truly unexpected errors.
+4. Test and Validate: Thoroughly test your code to ensure exceptions are appropriately handled.
+
+---
+
+### Key Views for Error Information
+- USER_ERRORS: Contains compilation errors for objects owned by the current user.
+- DBA_ERRORS: Contains compilation errors for all database objects (requires DBA privileges).
+

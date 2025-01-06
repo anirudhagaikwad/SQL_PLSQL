@@ -1,9 +1,9 @@
 
-```sql
+sql
 ALTER TABLE empdetails 
 ADD CONSTRAINT fk_empid 
 FOREIGN KEY (empid) REFERENCES emp (empid);
-```
+
 
 1. Constraint:
    - A constraint is a rule enforced on data in a database table to maintain data integrity and ensure that the data adheres to defined rules.
@@ -38,7 +38,7 @@ Cascading in the context of database constraints refers to a set of rules that d
    Use Case: Useful when the child data should always be in sync with the parent data.
 
    Example:
-   ```sql
+   sql
    CREATE TABLE parent (
        id INT PRIMARY KEY
    );
@@ -48,7 +48,7 @@ Cascading in the context of database constraints refers to a set of rules that d
        parent_id INT,
        FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE CASCADE ON UPDATE CASCADE
    );
-   ```
+   
 
    - If you delete a row from `parent`, the corresponding rows in `child` are automatically deleted.
    - If you update the `id` of a `parent`, the `parent_id` in the `child` table is updated accordingly.
@@ -62,13 +62,13 @@ Cascading in the context of database constraints refers to a set of rules that d
    Use Case: Suitable when the relationship is no longer valid, but you want to keep the child record for historical purposes.
 
    Example:
-   ```sql
+   sql
    CREATE TABLE child (
        id INT PRIMARY KEY,
        parent_id INT NULL,
        FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE SET NULL
    );
-   ```
+   
 
    - If a `parent` row is deleted, the `parent_id` in the `child` table is set to `NULL`.
 
@@ -81,13 +81,13 @@ Cascading in the context of database constraints refers to a set of rules that d
    Use Case: Useful when you want to assign a default relationship if the parent is removed.
 
    Example:
-   ```sql
+   sql
    CREATE TABLE child (
        id INT PRIMARY KEY,
        parent_id INT DEFAULT 0,
        FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE SET DEFAULT
    );
-   ```
+   
 
    - If a `parent` row is deleted, the `parent_id` in the `child` table is set to the default value (e.g., `0`).
 
@@ -100,13 +100,13 @@ Cascading in the context of database constraints refers to a set of rules that d
    Use Case: Suitable when you want strict enforcement of referential integrity.
 
    Example:
-   ```sql
+   sql
    CREATE TABLE child (
        id INT PRIMARY KEY,
        parent_id INT,
        FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE NO ACTION
    );
-   ```
+   
 
    - If you attempt to delete a `parent` row with references in the `child` table, the database throws an error.
 
@@ -118,9 +118,9 @@ Cascading in the context of database constraints refers to a set of rules that d
    Use Case: Similar to `NO ACTION` but with immediate enforcement.
 
    Example:
-   ```sql
+   sql
    FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE RESTRICT
-   ```
+   
 
    - Deleting a referenced parent row immediately fails.
 

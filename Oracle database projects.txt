@@ -1,0 +1,220 @@
+Oracle database projects 
+--------------------------------------------------------
+
+### 1. Employee Payroll Management
+   - Description: Design a database to calculate employee payroll based on attendance, salary slabs, bonuses, and deductions.
+   - Key Tasks:
+     - Write SQL queries for payroll calculation.
+     - Use PL/SQL procedures to automate monthly salary generation.
+     - Create triggers to update salary details upon employee data changes.
+
+---
+
+### 2. Course Registration System
+   - Description: Develop a database to manage student course registrations, prerequisites, and credit requirements.
+   - Key Tasks:
+     - Implement constraints to ensure prerequisites are met.
+     - Write PL/SQL procedures to calculate total credits for a student.
+     - Use triggers to prevent over-enrollment in a course.
+
+---
+
+### 3. Banking Transaction System
+   - Description: Create a database to track customer accounts, deposits, withdrawals, and fund transfers.
+   - Key Tasks:
+     - Write PL/SQL procedures for transaction handling (e.g., transfers between accounts).
+     - Use triggers to log all transactions in an audit table.
+     - Implement constraints to ensure account balance is non-negative.
+
+---
+
+### 4. Inventory and Stock Management
+   - Description: Build a database to track inventory levels, purchase orders, and stock movements.
+   - Key Tasks:
+     - Write SQL queries for stock-level reports.
+     - Use triggers to update stock levels upon item additions or removals.
+     - Implement PL/SQL procedures for restocking recommendations.
+
+---
+
+### 5. Hotel Room Booking System
+   - Description: Design a database to handle room bookings, availability, and customer details.
+   - Key Tasks:
+     - Use PL/SQL functions to check room availability.
+     - Write triggers to prevent double bookings.
+     - Generate reports on occupancy rates using SQL.
+
+---
+
+### 6. Student Performance Analysis
+   - Description: Create a database to manage student grades and generate performance reports.
+   - Key Tasks:
+     - Write SQL queries to calculate GPA.
+     - Use PL/SQL procedures to generate grade distribution reports.
+     - Implement triggers to notify students of grade changes.
+
+---
+
+### 7. Library Fine Management
+   - Description: Develop a database to manage book loans, returns, and fine calculations.
+   - Key Tasks:
+     - Use triggers to calculate fines for overdue returns.
+     - Write PL/SQL functions to waive fines under specific conditions.
+     - Generate daily and monthly fine collection reports.
+
+---
+
+### 8. Crime Record Database
+   - Description: Build a database to track crime reports, suspects, and investigation details.
+   - Key Tasks:
+     - Use PL/SQL procedures to generate crime statistics.
+     - Write triggers to automatically update case status upon suspect arrest.
+     - Create queries to analyze crime trends by location or type.
+
+---
+
+### 9. E-Commerce Order Management
+   - Description: Create a database to manage orders, customers, and product inventories.
+   - Key Tasks:
+     - Write SQL queries to summarize orders by customer or product.
+     - Use triggers to update stock levels upon order placement.
+     - Write PL/SQL procedures for order status updates.
+
+---
+
+### 10. Hospital Appointment Scheduling
+   - Description: Develop a database to schedule and manage doctor appointments.
+   - Key Tasks:
+     - Write SQL queries to check doctor availability.
+     - Use triggers to prevent double booking for the same time slot.
+     - Write PL/SQL functions to calculate patient waiting times.
+
+---
+
+### 11. Customer Feedback Analysis System
+   - Description: Develop a database to store and analyze customer feedback for a product or service.
+   - Key Tasks:
+     - Use SQL to aggregate and analyze feedback by rating, product, or region.
+     - Write PL/SQL functions to identify the most common complaints.
+     - Implement triggers to log feedback updates.
+
+---
+
+### 12. Flight Scheduling System
+   - Description: Design a database to manage flight schedules, bookings, and cancellations.
+   - Key Tasks:
+     - Use PL/SQL procedures to allocate seats dynamically based on availability.
+     - Write SQL queries to find popular routes or flight occupancy trends.
+     - Implement constraints to ensure valid scheduling (e.g., no overlapping times).
+
+---
+
+### 13. Medical Store Inventory Management
+   - Description: Create a database to track medicines, suppliers, and sales in a medical store.
+   - Key Tasks:
+     - Write SQL queries to monitor stock levels and expiry dates.
+     - Use triggers to update inventory after sales.
+     - Implement PL/SQL procedures for automatic reorder generation.
+
+---
+
+### 14. Attendance Management System
+   - Description: Build a database to manage student attendance records for a college.
+   - Key Tasks:
+     - Use PL/SQL procedures to calculate attendance percentages.
+     - Write triggers to notify students below a certain threshold.
+     - Generate attendance reports using SQL.
+
+---
+
+### 15. Car Rental System
+   - Description: Develop a database to manage car bookings, customers, and rental durations.
+   - Key Tasks:
+     - Write SQL queries to identify frequently rented cars.
+     - Use triggers to update car availability after booking.
+     - Implement PL/SQL functions to calculate rental costs based on duration.
+
+---
+
+### 16. Food Delivery Management System
+   - Description: Create a database to track orders, customers, delivery agents, and restaurants.
+   - Key Tasks:
+     - Write SQL queries to calculate average delivery times.
+     - Use triggers to update order status upon delivery.
+     - Implement PL/SQL procedures for assigning delivery agents dynamically.
+
+---
+
+### 17. Event Management System
+   - Description: Design a database to manage event bookings, venues, and participants.
+   - Key Tasks:
+     - Write SQL queries to check venue availability.
+     - Use PL/SQL procedures to calculate event costs based on resources.
+     - Implement triggers to prevent double-booking of venues.
+
+---
+
+### 18. Insurance Policy Management
+   - Description: Build a database to manage customer insurance policies, claims, and renewals.
+   - Key Tasks:
+     - Write SQL queries to analyze claim trends by policy type.
+     - Use triggers to send reminders for policy renewals.
+     - Implement PL/SQL procedures for premium calculations.
+
+---
+
+### 19. Waste Management System
+   - Description: Create a database to manage waste collection, disposal sites, and schedules.
+   - Key Tasks:
+     - Write SQL queries to generate collection schedules for specific areas.
+     - Use PL/SQL functions to calculate disposal site utilization.
+     - Implement triggers to track missed collections and notify managers.
+
+---
+
+### 20. Sports Tournament Database
+   - Description: Design a database to manage teams, players, matches, and scores for a tournament.
+   - Key Tasks:
+     - Write SQL queries to generate league standings based on points.
+     - Use PL/SQL procedures to calculate player statistics dynamically.
+     - Implement triggers to update match results and points table.
+
+---
+
+Python Project Description 
+
+### Project Description: Python Core API with Database Integration
+
+Objective:  
+The project involves developing a RESTful API using only Python's core libraries without relying on external frameworks. The API facilitates interaction with a database to perform CRUD (Create, Read, Update, Delete) operations. The API is tested and verified using Postman to ensure its functionality and reliability.
+
+Features:  
+1. Database Integration:  
+   - A relational database (e.g., SQLite or MySQL) is used for storing and retrieving data.  
+   - Python's `sqlite3` or `mysql.connector` library is employed for database operations.
+
+2. API Development:  
+   - Python's `http.server` or `BaseHTTPServer` is used to set up the HTTP server.  
+   - Endpoints for CRUD operations are implemented:
+     - GET: Fetch data from the database.
+     - POST: Add new data to the database.
+     - PUT: Update existing data in the database.
+     - DELETE: Remove data from the database.
+
+3. Data Validation:  
+   - Input data is validated using Python's core utilities to ensure accuracy and prevent errors.
+
+4. Testing:  
+   - Postman is used to test the API endpoints for functionality, error handling, and performance.
+
+Technology Stack:  
+- Programming Language: Python (core libraries only)  
+- Database: SQLite/MySQL (using Python's built-in libraries)  
+- Tools: Postman for API testing  
+
+Use Case:  
+This project is ideal for developers aiming to understand API development fundamentals without frameworks. It provides a foundational understanding of how to interact with databases and build APIs using Python's core capabilities.
+
+---
+
+https://docs.google.com/spreadsheets/d/1Mygju62wnaXjQY0bZ7pKSVecK0R3Co6YSKQYp7nGNZ4/edit?usp=sharing

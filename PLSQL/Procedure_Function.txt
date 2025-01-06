@@ -1,39 +1,39 @@
 Procedures and functions in database programming are both database objects used to encapsulate a series of SQL and/or PL/SQL statements for specific purposes. However, they have some key differences:
 
-1. **Return Type:**
+1. Return Type:
 
-   - **Procedure:** A procedure does not return a value. It is used to perform an action or a set of actions, such as updating data, without returning a result to the caller. Procedures use the `OUT` and `IN OUT` parameters to pass data back to the caller if needed.
+   - Procedure: A procedure does not return a value. It is used to perform an action or a set of actions, such as updating data, without returning a result to the caller. Procedures use the `OUT` and `IN OUT` parameters to pass data back to the caller if needed.
 
-   - **Function:** A function returns a single value of a specified data type. It must include a `RETURN` statement to provide a result to the caller. Functions are typically used to compute and return values based on input parameters.
+   - Function: A function returns a single value of a specified data type. It must include a `RETURN` statement to provide a result to the caller. Functions are typically used to compute and return values based on input parameters.
 ------------------------------------------------------------------
-2. **Usage:**
+2. Usage:
 
-   - **Procedure:** Procedures are mainly used for performing actions or tasks, such as data manipulation (e.g., inserting, updating, deleting records), and they may or may not take input parameters.
+   - Procedure: Procedures are mainly used for performing actions or tasks, such as data manipulation (e.g., inserting, updating, deleting records), and they may or may not take input parameters.
 
-   - **Function:** Functions are primarily used for computing and returning values. They always return a result and can be used in SQL queries or expressions, making them suitable for calculations and data retrieval tasks.
+   - Function: Functions are primarily used for computing and returning values. They always return a result and can be used in SQL queries or expressions, making them suitable for calculations and data retrieval tasks.
 ---------------------------------------------------------------------
-3. **Call Syntax:**
+3. Call Syntax:
 
-   - **Procedure:** To call a procedure, you use the `CALL` statement or simply reference its name. For example, `CALL my_procedure();` or `my_procedure();`.
+   - Procedure: To call a procedure, you use the `CALL` statement or simply reference its name. For example, `CALL my_procedure();` or `my_procedure();`.
 
-   - **Function:** To call a function, you typically use it within an SQL statement or expression. For example, `SELECT my_function() FROM dual;`.
+   - Function: To call a function, you typically use it within an SQL statement or expression. For example, `SELECT my_function() FROM dual;`.
 -----------------------------------------------------------------------
-4. **Result Handling:**
+4. Result Handling:
 
-   - **Procedure:** Procedures do not return a result directly. They may use `OUT` or `IN OUT` parameters to pass data back to the caller.
+   - Procedure: Procedures do not return a result directly. They may use `OUT` or `IN OUT` parameters to pass data back to the caller.
 
-   - **Function:** Functions return a result directly to the caller, which can be assigned to variables or used in SQL expressions.
+   - Function: Functions return a result directly to the caller, which can be assigned to variables or used in SQL expressions.
 ---------------------------------------------------------------------
-5. **Transaction Control:**
+5. Transaction Control:
 
-   - **Procedure:** Procedures can contain transaction control statements (e.g., `COMMIT`, `ROLLBACK`) to manage transactions explicitly.
+   - Procedure: Procedures can contain transaction control statements (e.g., `COMMIT`, `ROLLBACK`) to manage transactions explicitly.
 
-   - **Function:** Functions are not allowed to contain transaction control statements. They are considered "read-only" in terms of data modification.
+   - Function: Functions are not allowed to contain transaction control statements. They are considered "read-only" in terms of data modification.
 ------------------------------------------------------------------------
-6. **Use in SQL Queries:**
+6. Use in SQL Queries:
 
-   - **Procedure:** Procedures are not directly usable in SQL queries. They are typically called from PL/SQL or application code.
+   - Procedure: Procedures are not directly usable in SQL queries. They are typically called from PL/SQL or application code.
 
-   - **Function:** Functions can be used in SQL queries like regular columns or expressions. They provide a way to encapsulate complex computations within SQL statements.
+   - Function: Functions can be used in SQL queries like regular columns or expressions. They provide a way to encapsulate complex computations within SQL statements.
 ------------------------------------------------------------------------
 In summary, procedures are used for performing actions and do not return values directly, while functions are used for computations and return a single value. The choice between a procedure and a function depends on the specific task and whether a result needs to be returned.

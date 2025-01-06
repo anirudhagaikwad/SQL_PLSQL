@@ -1,0 +1,825 @@
+### 1. Log Salary Updates
+Problem Statement: Create a trigger to log every salary update in a `salary_audit` table.
+
+Solution:
+
+CREATE TABLE salary_audit (
+   employee_id NUMBER,
+   old_salary NUMBER,
+   new_salary NUMBER,
+   update_date DATE
+);
+
+CREATE OR REPLACE TRIGGER log_salary_update
+AFTER UPDATE OF salary ON employees
+FOR EACH ROW
+BEGIN
+   INSERT INTO salary_audit (employee_id, old_salary, new_salary, update_date)
+   VALUES (:OLD.employee_id, :OLD.salary, :NEW.salary, SYSDATE);
+END;
+
+
+---
+
+### 2. Prevent Negative Salaries
+Problem Statement: Write a trigger to prevent any insertion or update that sets a negative salary.
+
+Solution:
+
+CREATE OR REPLACE TRIGGER prevent_negative_salary
+BEFORE INSERT OR UPDATE OF salary ON employees
+FOR EACH ROW
+BEGIN
+   IF :NEW.salary < 0 THEN
+      RAISE_APPLICATION_ERROR(-20001, 'Salary cannot be negative.');
+   END IF;
+END;
+
+```
+
+### 3. Automatically Set Hire Date
+Problem Statement: Create a trigger to automatically set the `hire_date` column to the current date if it is not provided during insertion.
+
+Solution:
+
+CREATE OR REPLACE TRIGGER set_hire_date
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+   IF :NEW.hire_date IS NULL THEN
+      :NEW.hire_date := SYSDATE;
+   END IF;
+END;
+
+```
+
+### 4. Track Deletions in Audit Table
+Problem Statement: Write a trigger to log details of employees deleted from the `employees` table in an `employee_audit` table.
+
+Solution:
+
+CREATE TABLE employee_audit (
+   employee_id NUMBER,
+   first_name VARCHAR2(50),
+   last_name VARCHAR2(50),
+   deleted_date DATE
+);
+
+CREATE OR REPLACE TRIGGER log_employee_deletion
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+   INSERT INTO employee_audit (employee_id, first_name, last_name, deleted_date)
+   VALUES (:OLD.employee_id, :OLD.first_name, :OLD.last_name, SYSDATE);
+END;
+
+```
+
+### 5. Prevent Deletion of Executives
+Problem Statement: Create a trigger to prevent the deletion of employees with the job title "Executive".
+
+Solution:
+
+CREATE OR REPLACE TRIGGER prevent_executive_deletion
+BEFORE DELETE ON employees
+FOR EACH ROW
+BEGIN
+   IF :OLD.job_id = 'EXEC' THEN
+      RAISE_APPLICATION_ERROR(-20002, 'Cannot delete executives.');
+   END IF;
+END;
+
+```
+
+### 6. Update Manager Count Automatically
+Problem Statement: Write a trigger to update the `manager_count` column in the `departments` table whenever an employee is assigned or unassigned a manager.
+
+Solution:
+
+CREATE OR REPLACE TRIGGER update_manager_count
+AFTER INSERT OR DELETE ON employees
+FOR EACH ROW
+BEGIN
+   IF :NEW.manager_id IS NOT NULL THEN
+      UPDATE departments
+      SET manager_count = manager_count + 1
+      WHERE department_id = :NEW.department_id;
+   ELSIF :OLD.manager_id IS NOT NULL THEN
+      UPDATE departments
+      SET manager_count = manager_count - 1
+      WHERE department_id = :OLD.department_id;
+   END IF;
+END;
+
+```
+
+### 7. Log Updates to Specific Columns
+Problem Statement: Write a trigger to log changes to the `job_id` or `department_id` columns in a log table.
+
+Solution:
+
+CREATE TABLE job_department_log (
+   employee_id NUMBER,
+   column_name VARCHAR2(50),
+   old_value VARCHAR2(50),
+   new_value VARCHAR2(50),
+   change_date DATE
+);
+
+CREATE OR REPLACE TRIGGER log_job_department_changes
+AFTER UPDATE OF job_id, department_id ON employees
+FOR EACH ROW
+BEGIN
+   IF :OLD.job_id != :NEW.job_id THEN
+      INSERT INTO job_department_log
+      VALUES (:OLD.employee_id, 'job_id', :OLD.job_id, :NEW.job_id, SYSDATE);
+   END IF;
+
+   IF :OLD.department_id != :NEW.department_id THEN
+      INSERT INTO job_department_log
+      VALUES (:OLD.employee_id, 'department_id', :OLD.department_id, :NEW.department_id, SYSDATE);
+   END IF;
+END;
+
+```
+
+### 8. Enforce Unique Email Domain
+Problem Statement: Write a trigger to enforce that all employee emails must end with "@company.com".
+
+Solution:
+
+CREATE OR REPLACE TRIGGER enforce_email_domain
+BEFORE INSERT OR UPDATE OF email ON employees
+FOR EACH ROW
+BEGIN
+   IF NOT REGEXP_LIKE(:NEW.email, '@company\.com$') THEN
+      RAISE_APPLICATION_ERROR(-20003, 'Email must end with "@company.com".');
+   END IF;
+END;
+
+```
+
+### 9. Automatically Assign Default Department
+Problem Statement: Write a trigger to automatically assign the default department ID `10` if no department is specified during insertion.
+
+Solution:
+
+CREATE OR REPLACE TRIGGER assign_default_department
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+   IF :NEW.department_id IS NULL THEN
+      :NEW.department_id := 10;
+   END IF;
+END;
+
+```
+
+### 10. Prevent Salary Updates for High Earners
+Problem Statement: Create a trigger to prevent salary updates for employees earning above `20000`.
+
+Solution:
+
+CREATE OR REPLACE TRIGGER prevent_high_earner_salary_update
+BEFORE UPDATE OF salary ON employees
+FOR EACH ROW
+BEGIN
+   IF :OLD.salary > 20000 THEN
+      RAISE_APPLICATION_ERROR(-20004, 'Cannot update salary for high earners.');
+   END IF;
+END;
+
+```
+
+### 1. Audit Changes in Critical Data
+Trigger: `log_salary_update`  
+Test Query:  
+
+-- Update salary for an employee
+UPDATE employees
+SET salary = 60000
+WHERE employee_id = 101;
+
+-- Verify the audit log
+SELECT * FROM salary_audit;
+```
+
+---
+
+### 2. Enforce Business Rules
+Trigger: `prevent_negative_salary`  
+Test Query:  
+
+-- Attempt to insert an employee with negative salary
+INSERT INTO employees (employee_id, first_name, last_name, salary)
+VALUES (999, 'John', 'Doe', -5000);
+
+-- Verify the error message
+-- ERROR: ORA-20001: Salary cannot be negative.
+```
+
+---
+
+### 3. Automate Derived Calculations
+Trigger: `update_manager_count`  
+Test Query:  
+
+-- Insert a new employee with a manager
+INSERT INTO employees (employee_id, first_name, last_name, manager_id, department_id)
+VALUES (102, 'Jane', 'Smith', 101, 10);
+
+-- Verify the manager count in the departments table
+SELECT department_id, manager_count
+FROM departments
+WHERE department_id = 10;
+```
+
+---
+
+### 4. Data Validation
+Trigger: `enforce_email_domain`  
+Test Query:  
+
+-- Attempt to insert an invalid email
+INSERT INTO employees (employee_id, first_name, last_name, email)
+VALUES (103, 'Alice', 'Johnson', 'alice@gmail.com');
+
+-- Verify the error message
+-- ERROR: ORA-20003: Email must end with "@company.com".
+
+-- Insert a valid email
+INSERT INTO employees (employee_id, first_name, last_name, email)
+VALUES (104, 'Bob', 'Smith', 'bob@company.com');
+```
+
+---
+
+### 5. Cascade Updates
+Trigger: `log_job_department_changes`  
+Test Query:  
+
+-- Update job ID for an employee
+UPDATE employees
+SET job_id = 'IT_PROG'
+WHERE employee_id = 104;
+
+-- Verify the change log
+SELECT * FROM job_department_log;
+
+-- Expected Output:
+-- employee_id: 104, column_name: job_id, old_value: NULL, new_value: IT_PROG
+```
+
+---
+
+### 6. Automatically Populate Metadata
+Trigger: `populate_metadata`  
+Test Query:  
+
+-- Insert a new employee
+INSERT INTO employees (employee_id, first_name, last_name)
+VALUES (105, 'Eve', 'Taylor');
+
+-- Verify the metadata columns
+SELECT employee_id, created_date, created_by
+FROM employees
+WHERE employee_id = 105;
+
+-- Update an employee
+UPDATE employees
+SET last_name = 'Brown'
+WHERE employee_id = 105;
+
+-- Verify updated metadata
+SELECT employee_id, updated_date, updated_by
+FROM employees
+WHERE employee_id = 105;
+```
+
+---
+
+### 7. Monitor Suspicious Activity
+Trigger: `log_employee_deletion`  
+Test Query:  
+
+-- Delete an employee
+DELETE FROM employees
+WHERE employee_id = 105;
+
+-- Verify the audit log
+SELECT * FROM employee_audit;
+
+-- Expected Output:
+-- employee_id: 105, first_name: Eve, last_name: Brown, deleted_date: [timestamp]
+```
+
+---
+
+### 8. Default Value Assignment
+Trigger: `assign_default_department`  
+Test Query:  
+
+-- Insert a new employee without specifying department
+INSERT INTO employees (employee_id, first_name, last_name)
+VALUES (106, 'Sam', 'Wilson');
+
+-- Verify the assigned department
+SELECT employee_id, department_id
+FROM employees
+WHERE employee_id = 106;
+
+-- Expected Output:
+-- employee_id: 106, department_id: 10
+```
+
+---
+
+### 9. Data Synchronization
+Trigger: Adapted from `log_job_department_changes`  
+Test Query:  
+
+-- Update department ID for an employee
+UPDATE employees
+SET department_id = 20
+WHERE employee_id = 104;
+
+-- Verify the synchronization log or the secondary system
+SELECT * FROM job_department_log;
+```
+
+---
+
+### 10. Enforce Referential Integrity
+Trigger: `prevent_executive_deletion`  
+Test Query:  
+
+-- Attempt to delete an executive
+DELETE FROM employees
+WHERE employee_id = 100; -- Assuming employee 100 is an executive
+
+-- Verify the error message
+-- ERROR: ORA-20002: Cannot delete executives.
+---
+
+### 1. Calculate Years of Service for Each Employee
+Problem Statement: Write a procedure to display the years of service for all employees based on their hire date.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE calculate_years_of_service IS
+   CURSOR emp_cursor IS SELECT employee_id, first_name, hire_date FROM employees;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Employee ID: ' || emp_record.employee_id || ', Name: ' || emp_record.first_name ||
+                           ', Years of Service: ' || FLOOR((SYSDATE - emp_record.hire_date)  365));
+   END LOOP;
+   CLOSE emp_cursor;
+END;
+
+```
+
+---
+
+### 2. Display Departments with Employee Count
+Problem Statement: Write a procedure to list each department and the number of employees in it.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE department_employee_count IS
+   CURSOR dept_cursor IS SELECT department_id, COUNT(*) AS emp_count FROM employees GROUP BY department_id;
+   dept_record dept_cursor%ROWTYPE;
+BEGIN
+   OPEN dept_cursor;
+   LOOP
+      FETCH dept_cursor INTO dept_record;
+      EXIT WHEN dept_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Department ID: ' || dept_record.department_id || ', Employee Count: ' || dept_record.emp_count);
+   END LOOP;
+   CLOSE dept_cursor;
+END;
+
+```
+
+---
+
+### 3. Find Employees Without Managers
+Problem Statement: Write a function to return the count of employees who do not have a manager.
+
+Solution:
+
+CREATE OR REPLACE FUNCTION employees_without_managers RETURN NUMBER IS
+   emp_count NUMBER;
+BEGIN
+   SELECT COUNT(*) INTO emp_count FROM employees WHERE manager_id IS NULL;
+   RETURN emp_count;
+END;
+
+```
+Usage:
+
+SELECT employees_without_managers FROM DUAL;
+```
+
+---
+
+### 4. Generate Bonus Report
+Problem Statement: Write a procedure to calculate a 5% bonus for all employees and display their new total salary.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE generate_bonus_report IS
+   CURSOR emp_cursor IS SELECT employee_id, first_name, salary FROM employees;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Employee ID: ' || emp_record.employee_id || ', Name: ' || emp_record.first_name ||
+                           ', New Total Salary: ' || emp_record.salary * 1.05);
+   END LOOP;
+   CLOSE emp_cursor;
+END;
+
+```
+
+---
+
+### 5. Find Employees in Top N Salaries
+Problem Statement: Write a procedure to list employees with the top N salaries.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE top_n_salaries(n IN NUMBER) IS
+   CURSOR emp_cursor IS
+      SELECT employee_id, first_name, salary FROM employees ORDER BY salary DESC FETCH FIRST n ROWS ONLY;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Employee ID: ' || emp_record.employee_id || ', Name: ' || emp_record.first_name ||
+                           ', Salary: ' || emp_record.salary);
+   END LOOP;
+   CLOSE emp_cursor;
+END;
+
+```
+
+---
+
+### 6. Count Employees by Job
+Problem Statement: Write a procedure to count the number of employees for each job.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE count_employees_by_job IS
+   CURSOR job_cursor IS SELECT job_id, COUNT(*) AS emp_count FROM employees GROUP BY job_id;
+   job_record job_cursor%ROWTYPE;
+BEGIN
+   OPEN job_cursor;
+   LOOP
+      FETCH job_cursor INTO job_record;
+      EXIT WHEN job_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Job ID: ' || job_record.job_id || ', Employee Count: ' || job_record.emp_count);
+   END LOOP;
+   CLOSE job_cursor;
+END;
+
+```
+
+---
+
+### 7. Generate Employee Name Initials
+Problem Statement: Write a procedure to display the initials of each employee.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE generate_employee_initials IS
+   CURSOR emp_cursor IS SELECT first_name, last_name FROM employees;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Initials: ' || SUBSTR(emp_record.first_name, 1, 1) || SUBSTR(emp_record.last_name, 1, 1));
+   END LOOP;
+   CLOSE emp_cursor;
+END;
+
+```
+
+---
+
+### 8. Retrieve Employees by Salary Range
+Problem Statement: Write a procedure to list employees whose salary is within a specified range.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE employees_by_salary_range(min_salary IN NUMBER, max_salary IN NUMBER) IS
+   CURSOR emp_cursor IS SELECT first_name, salary FROM employees WHERE salary BETWEEN min_salary AND max_salary;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Name: ' || emp_record.first_name || ', Salary: ' || emp_record.salary);
+   END LOOP;
+   CLOSE emp_cursor;
+END;
+
+```
+
+---
+
+### 9. Calculate Average Age of Employees
+Problem Statement: Write a function to calculate the average age of employees based on their hire date.
+
+Solution:
+
+CREATE OR REPLACE FUNCTION average_employee_age RETURN NUMBER IS
+   avg_age NUMBER;
+BEGIN
+   SELECT AVG(TRUNC((SYSDATE - hire_date)  365)) INTO avg_age FROM employees;
+   RETURN avg_age;
+END;
+
+```
+Usage:
+
+SELECT average_employee_age FROM DUAL;
+```
+
+---
+
+### 10. Check Employee Existence
+Problem Statement: Write a function to check if an employee exists by their ID and return a boolean.
+
+Solution:
+
+CREATE OR REPLACE FUNCTION employee_exists(emp_id IN NUMBER) RETURN BOOLEAN IS
+   emp_count NUMBER;
+BEGIN
+   SELECT COUNT(*) INTO emp_count FROM employees WHERE employee_id = emp_id;
+   RETURN emp_count > 0;
+END;
+
+```
+Usage:
+
+BEGIN
+   IF employee_exists(101) THEN
+      DBMS_OUTPUT.PUT_LINE('Employee exists.');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('Employee does not exist.');
+   END IF;
+END;
+
+```
+
+### 1. Retrieve Employee Details Using Cursor
+Problem Statement: Write a procedure to fetch and display all employee details using a cursor.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE fetch_all_employees IS
+   CURSOR emp_cursor IS SELECT employee_id, first_name, last_name, salary FROM employees;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('ID: ' || emp_record.employee_id || ', Name: ' || emp_record.first_name || ' ' || emp_record.last_name || ', Salary: ' || emp_record.salary);
+   END LOOP;
+   CLOSE emp_cursor;
+END;
+
+```
+
+---
+
+### 2. Calculate Total Salary for a Department
+Problem Statement: Write a function to calculate the total salary of all employees in a specific department.
+
+Solution:
+
+CREATE OR REPLACE FUNCTION total_salary(dept_id IN NUMBER) RETURN NUMBER IS
+   total NUMBER := 0;
+   CURSOR salary_cursor IS SELECT salary FROM employees WHERE department_id = dept_id;
+   sal_rec salary_cursor%ROWTYPE;
+BEGIN
+   OPEN salary_cursor;
+   LOOP
+      FETCH salary_cursor INTO sal_rec;
+      EXIT WHEN salary_cursor%NOTFOUND;
+      total := total + sal_rec.salary;
+   END LOOP;
+   CLOSE salary_cursor;
+   RETURN total;
+END;
+
+```
+Usage:
+
+SELECT total_salary(60) FROM DUAL;
+```
+
+---
+
+### 3. Update Employee Salary Using Cursor
+Problem Statement: Write a procedure to give a 10% raise to employees earning below a specific salary.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE raise_salary(threshold IN NUMBER) IS
+   CURSOR emp_cursor IS SELECT employee_id, salary FROM employees WHERE salary < threshold;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      UPDATE employees SET salary = salary * 1.1 WHERE employee_id = emp_record.employee_id;
+   END LOOP;
+   CLOSE emp_cursor;
+   COMMIT;
+END;
+
+```
+
+---
+
+### 4. Find Manager Name for an Employee
+Problem Statement: Write a function to return the manager's name for a given employee ID.
+
+Solution:
+
+CREATE OR REPLACE FUNCTION get_manager_name(emp_id IN NUMBER) RETURN VARCHAR2 IS
+   manager_name VARCHAR2(100);
+   CURSOR mgr_cursor IS
+      SELECT first_name || ' ' || last_name AS name
+      FROM employees
+      WHERE employee_id = (SELECT manager_id FROM employees WHERE employee_id = emp_id);
+BEGIN
+   OPEN mgr_cursor;
+   FETCH mgr_cursor INTO manager_name;
+   CLOSE mgr_cursor;
+   RETURN manager_name;
+END;
+
+```
+Usage:
+
+SELECT get_manager_name(101) FROM DUAL;
+```
+
+---
+
+### 5. Display Employees in a Department
+Problem Statement: Write a procedure to display employees from a specific department.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE display_employees(dept_id IN NUMBER) IS
+   CURSOR emp_cursor IS SELECT first_name, last_name FROM employees WHERE department_id = dept_id;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Name: ' || emp_record.first_name || ' ' || emp_record.last_name);
+   END LOOP;
+   CLOSE emp_cursor;
+END;
+
+```
+
+---
+
+### 6. Find the Highest-Paid Employee
+Problem Statement: Write a function to return the name of the highest-paid employee.
+
+Solution:
+
+CREATE OR REPLACE FUNCTION highest_paid_employee RETURN VARCHAR2 IS
+   emp_name VARCHAR2(100);
+   CURSOR max_salary_cursor IS
+      SELECT first_name || ' ' || last_name AS name FROM employees WHERE salary = (SELECT MAX(salary) FROM employees);
+BEGIN
+   OPEN max_salary_cursor;
+   FETCH max_salary_cursor INTO emp_name;
+   CLOSE max_salary_cursor;
+   RETURN emp_name;
+END;
+
+```
+Usage:
+
+SELECT highest_paid_employee FROM DUAL;
+```
+
+---
+
+### 7. List Employees by Job Title
+Problem Statement: Write a procedure to display all employees with a specific job title.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE employees_by_job(job_title IN VARCHAR2) IS
+   CURSOR job_cursor IS SELECT first_name, last_name FROM employees WHERE job_id = (SELECT job_id FROM jobs WHERE job_title = job_title);
+   emp_record job_cursor%ROWTYPE;
+BEGIN
+   OPEN job_cursor;
+   LOOP
+      FETCH job_cursor INTO emp_record;
+      EXIT WHEN job_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Name: ' || emp_record.first_name || ' ' || emp_record.last_name);
+   END LOOP;
+   CLOSE job_cursor;
+END;
+
+```
+
+---
+
+### 8. Calculate Average Salary for a Department
+Problem Statement: Write a function to calculate the average salary for employees in a specific department.
+
+Solution:
+
+CREATE OR REPLACE FUNCTION avg_salary(dept_id IN NUMBER) RETURN NUMBER IS
+   avg_sal NUMBER := 0;
+   CURSOR sal_cursor IS SELECT AVG(salary) AS avg_salary FROM employees WHERE department_id = dept_id;
+BEGIN
+   OPEN sal_cursor;
+   FETCH sal_cursor INTO avg_sal;
+   CLOSE sal_cursor;
+   RETURN avg_sal;
+END;
+
+```
+Usage:
+
+SELECT avg_salary(60) FROM DUAL;
+```
+
+---
+
+### 9. Delete Employees Below Salary Threshold
+Problem Statement: Write a procedure to delete employees earning below a specific salary.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE delete_low_salary_employees(salary_threshold IN NUMBER) IS
+   CURSOR emp_cursor IS SELECT employee_id FROM employees WHERE salary < salary_threshold;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DELETE FROM employees WHERE employee_id = emp_record.employee_id;
+   END LOOP;
+   CLOSE emp_cursor;
+   COMMIT;
+END;
+
+```
+
+---
+
+### 10. Generate Employee Report
+Problem Statement: Write a procedure to generate a report of employees sorted by department and salary.
+
+Solution:
+
+CREATE OR REPLACE PROCEDURE employee_report IS
+   CURSOR emp_cursor IS
+      SELECT department_id, first_name, last_name, salary
+      FROM employees
+      ORDER BY department_id, salary DESC;
+   emp_record emp_cursor%ROWTYPE;
+BEGIN
+   OPEN emp_cursor;
+   LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Dept: ' || emp_record.department_id || ', Name: ' || emp_record.first_name || ' ' || emp_record.last_name || ', Salary: ' || emp_record.salary);
+   END LOOP;
+   CLOSE emp_cursor;
+END;
+
+```
+
+---
+
+

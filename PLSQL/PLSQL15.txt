@@ -1,0 +1,116 @@
+In PL/SQL, a package is a schema object that groups logically related PL/SQL types, variables, constants, cursors, exceptions, and subprograms (procedures and functions). A package provides a way to organize and encapsulate related functionality, making it easier to manage, reuse, and maintain the code. 
+
+If the package specification does not contain any stored functions, procedures and no private code is needed, you don’t need to have a package body. 
+These packages may contain only type definition and variables declaration. Those variables are known as package data. 
+
+### Components of a Package  
+A package consists of two parts:  
+
+1. Package Specification  
+   - It declares the public elements of the package, such as procedures, functions, variables, and constants, which are accessible outside the package.
+   - It serves as the interface to the package.  
+   - Example:  
+     
+     CREATE OR REPLACE PACKAGE my_package AS
+         -- Public declaration
+         PROCEDURE say_hello;
+         FUNCTION add_numbers(a NUMBER, b NUMBER) RETURN NUMBER;
+     END my_package;
+     ```  
+
+2. Package Body  
+   - It contains the implementation of the elements declared in the specification.  
+   - It can also include private elements that are not visible outside the package.  
+   - Example:  
+     
+     CREATE OR REPLACE PACKAGE BODY my_package AS
+         -- Procedure implementation
+         PROCEDURE say_hello IS
+         BEGIN
+             DBMS_OUTPUT.PUT_LINE('Hello, World!');
+         END say_hello;
+
+         -- Function implementation
+         FUNCTION add_numbers(a NUMBER, b NUMBER) RETURN NUMBER IS
+         BEGIN
+             RETURN a + b;
+         END add_numbers;
+     END my_package;
+     ```  
+
+### Benefits of Using Packages  
+1. Encapsulation: Packages hide the implementation details while exposing only the necessary interfaces.  
+2. Code Reusability: Related code is grouped together, making it easier to reuse.  
+3. Improved Performance: Packages are loaded into memory as a unit, reducing the need to parse individual objects repeatedly.  
+4. Modularity: Packages promote modular programming by organizing related functionalities.  
+5. Security: You can control access to the package's components by specifying public and private sections.  
+6. Maintainability: Changes to the package body do not affect the specification, reducing dependencies.  
+
+### Example Usage  
+
+-- Using the package
+BEGIN
+    my_package.say_hello;
+    DBMS_OUTPUT.PUT_LINE('Sum: ' || my_package.add_numbers(10, 20));
+END;
+```
+
+/*
+  Package personnel body
+*/
+CREATE OR REPLACE PACKAGE BODY personnel AS
+  -- get employee's fullname
+  FUNCTION get_fullname(n_emp_id NUMBER) RETURN VARCHAR2 IS
+      v_fullname VARCHAR2(46);
+  BEGIN
+    SELECT first_name || ',' ||  last_name
+    INTO v_fullname
+    FROM employees
+    WHERE employee_id = n_emp_id;
+
+    RETURN v_fullname;
+
+  EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN NULL;
+  WHEN TOO_MANY_ROWS THEN
+    RETURN NULL;
+  END; -- end get_fullname
+
+  -- get salary
+  FUNCTION get_salary(n_emp_id NUMBER) RETURN NUMBER IS
+    n_salary NUMBER(8,2);
+  BEGIN
+    SELECT salary
+    INTO n_salary
+    FROM employees
+    WHERE employee_id = n_emp_id;
+
+    RETURN n_salary;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN NULL;
+      WHEN TOO_MANY_ROWS THEN
+        RETURN NULL;
+  END;
+END personnel;
+
+
+SET SERVEROUTPUT ON SIZE 1000000;
+DECLARE
+  n_salary NUMBER(8,2);
+  v_name   VARCHAR2(46);
+  n_emp_id NUMBER := &emp_id;
+BEGIN
+
+  v_name   := personnel.get_fullname(n_emp_id);
+  n_salary := personnel.get_salary(n_emp_id);
+
+  IF v_name  IS NOT NULL AND
+    n_salary IS NOT NULL
+  THEN
+    dbms_output.put_line('Employee: ' || v_name);
+    dbms_output.put_line('Salary:' || n_salary);
+  END IF;
+END;

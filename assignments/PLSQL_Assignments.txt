@@ -127,3 +127,15 @@ BEGIN
     END LOOP;
 END;
 
+1)Create Procedure to insert employee into table and show new employee from table 
+2)Create Function to calculate Tax on employee salary and call this function within procedure where you get emp_id,emp_name,emp_salary with it show calculated tax 
+
+
+
+
+
+
+
+
+
+
