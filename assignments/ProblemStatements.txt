@@ -79,6 +79,29 @@ CREATE TABLE job_department_log (
 Problem Statement: Write a trigger to enforce that all employee emails must end with "@company.com".
 ### 9. Prevent Salary Updates for High Earners
 Problem Statement: Create a trigger to prevent salary updates for employees earning above `20000`.
+----------------------------------------------------------------------------------------------
+### 1: Create a Package to Manage Employee Salaries
+Statement: Create a package to update employee salaries. The package should have:
+	1. A procedure to increase salary by a percentage.
+	2. A function to calculate the annual salary for a specific employee.
+### 2: Create a Package to Track Department Changes
+Statement: Create a package to log department updates. Include:
+	1. A procedure to change an employee's department.
+	2. Log the changes in a custom table.
+### 3: Create a Package to List High Earners
+Statement: Create a package to fetch details of employees earning above a specified threshold. Include a procedure to display their details.
+### 4: Create a Package to Manage Job Titles
+Statement: Create a package to manage job titles. It should include:
+	1. A procedure to update the job title for an employee.
+	2. A function to retrieve the current job title of an employee.
+### 5: Create a Package to Generate Reports
+Statement: Create a package to generate basic reports. Include a procedure to display the number of employees in each department.
+
+
+
+
+
+
 
 
 
